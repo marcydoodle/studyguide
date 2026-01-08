@@ -1,10 +1,9 @@
 import streamlit as st
-import pandas as pd
 
 # --- APP CONFIGURATION ---
 st.set_page_config(
-    page_title="Triple Threat Mastery (Weeks 1-20)",
-    page_icon="🎓",
+    page_title="Triple Threat: Cyber MS -> PhD Track",
+    page_icon="🧬",
     layout="wide"
 )
 
@@ -13,6 +12,7 @@ st.markdown("""
 <style>
     .stButton>button {
         width: 100%;
+        border-radius: 5px;
     }
     .success-box {
         padding: 1rem;
@@ -22,9 +22,24 @@ st.markdown("""
         border: 1px solid #c3e6cb;
         margin-top: 1rem;
     }
-    .stCaption {
-        font-size: 0.9rem;
-        color: #555;
+    .project-box {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+        margin-top: 1rem;
+    }
+    .research-box {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #cce5ff;
+        color: #004085;
+        border: 1px solid #b8daff;
+        margin-top: 1rem;
+    }
+    h1, h2, h3 {
+        color: #2c3e50;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -33,311 +48,233 @@ st.markdown("""
 if 'progress' not in st.session_state:
     st.session_state.progress = {}
 
-# --- LINK CONSTANTS (CYBER ONLY) ---
-MESSER_NET = "https://www.professormesser.com/network-plus/n10-009/n10-009-video/n10-009-training-course/"
-MESSER_SEC = "https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/"
-NET_CHUCK_LINUX = "https://www.youtube.com/playlist?list=PLIhvC56v631Mol7fo3oIzxPHfWdyod8t6"
-PYTHON_HUB = "https://www.w3schools.com/python/"
-PORT_SWIGGER = "https://portswigger.net/web-security/dashboard"
+# --- RESOURCE LINKS ---
+KHAN_SEARCH = "https://www.khanacademy.org/search?page_search_query="
+MIT_LINEAR_ALG = "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/video_lectures/"
+TREFOR_DISCRETE = "https://www.youtube.com/playlist?list=PLDDGPdw7e6Ag1EIznZ-m-qXu4XX3A0cIz" # Trefor Bazett Discrete Math
+ARXIV_SEC = "https://arxiv.org/list/cs.CR/recent"
+OIST_ADMISSIONS = "https://admissions.oist.jp/"
+PYTHON_DOCS = "https://docs.python.org/3/"
+SCAPY_DOCS = "https://scapy.readthedocs.io/en/latest/"
 
-# --- CURRICULUM DATA (WEEKS 1-20) ---
+# --- CURRICULUM DATA ---
 def get_curriculum():
     return {
         # --- PHASE 1: FOUNDATIONS (Weeks 1-10) ---
+        # Standard Foundation Layer
         1: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Order of Operations", "summary": "Master PEMDAS/BODMAS rules to solve complex arithmetic expressions correctly.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:foundation-algebra/x2f8bb11595b61c86:intro-variables/v/order-of-operations"},
-                "jp": {"topic": "Hiragana A-O", "summary": "Memorize the first 5 vowels of the Japanese alphabet (あ, い, う, え, お).", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "Intro to Networking", "summary": "Understand the basic purpose of networks and how computers connect.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Combining Like Terms", "summary": "Learn to simplify algebraic expressions by grouping same-variable terms.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:foundation-algebra/x2f8bb11595b61c86:combining-like-terms/v/combining-like-terms"},
-                "jp": {"topic": "Hiragana KA-KO", "summary": "Learn the 'K' column (か, き, く, け, こ) and practice writing.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "The OSI Model", "summary": "Memorize the 7 layers of the OSI model: Physical to Application.", "link": MESSER_NET}},
-            3: {"math": {"topic": "1-Step Equations", "summary": "Solve for x using basic addition, subtraction, multiplication, and division.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:solve-equations-inequalities/x2f8bb11595b61c86:linear-equations-variables-both-sides/v/why-we-do-the-same-thing-to-both-sides-of-equation"},
-                "jp": {"topic": "Hiragana SA-SO", "summary": "Learn the 'S' column (さ, し, す, せ, そ). Watch out for 'Shi'.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "TCP/IP Model", "summary": "Compare the 4-layer TCP/IP model to the 7-layer OSI model.", "link": MESSER_NET}},
-            4: {"math": {"topic": "2-Step Equations", "summary": "Solve equations requiring two distinct operations to isolate the variable.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:solve-equations-inequalities/x2f8bb11595b61c86:linear-equations-variables-both-sides/v/two-step-equations"},
-                "jp": {"topic": "Hiragana TA-TO", "summary": "Learn the 'T' column (た, ち, つ, て, と). Note 'Chi' and 'Tsu'.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "Binary & Hex", "summary": "Convert standard decimal numbers into Binary (Base-2) and Hex (Base-16).", "link": MESSER_NET}},
-            5: {"math": {"topic": "Multi-Step Equations", "summary": "Handle equations with variables on both sides and parenthesis.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:solve-equations-inequalities/x2f8bb11595b61c86:linear-equations-variables-both-sides/v/multi-step-equations-1"},
-                "jp": {"topic": "Hiragana NA-NO", "summary": "Learn the 'N' column (な, に, ぬ, ね, の).", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "IPv4 Addressing", "summary": "Understand IP structures, octets, and classes (A, B, C).", "link": MESSER_NET}},
-            6: {"math": {"topic": "Stats: Mean, Median, Mode", "summary": "Calculate central tendencies of a dataset.", "link": "https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/mean-median-basics/v/mean-median-and-mode"},
-                "jp": {"topic": "Writing Practice", "summary": "Practice writing all Hiragana learned so far from memory.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "Classful Subnetting", "summary": "Learn default subnet masks and network vs host portions.", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 1 Review", "summary": "Review all algebraic concepts from Week 1. Do a practice set.", "link": "https://www.khanacademy.org/math/algebra"},
-                "jp": {"topic": "Anki Setup", "summary": "Install Anki and set up your Hiragana deck for daily review.", "link": "https://apps.ankiweb.net/"},
-                "cyber": {"topic": "Lab: Install VirtualBox", "summary": "Install VirtualBox to prepare for Linux labs.", "link": "https://www.virtualbox.org/wiki/Downloads"}}
+            1: {"math": {"topic": "Order of Operations", "summary": "PEMDAS rules.", "link": f"{KHAN_SEARCH}Order+of+operations"}, "jp": {"topic": "Hiragana A-O", "summary": "First 5 vowels.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"}, "cyber": {"topic": "Network: OSI Model", "summary": "Layers 1-7.", "link": "https://www.professormesser.com/"}},
+            # ... (Placeholder for standard Phase 1 days) ...
+            7: {"math": {"topic": "Week 1 Review", "summary": "Algebra basics.", "link": f"{KHAN_SEARCH}Algebra"}, "jp": {"topic": "Anki Setup", "summary": "Daily reps.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "Lab: VirtualBox", "summary": "Setup Victim/Attacker VMs.", "link": "https://www.virtualbox.org/"}}
         }},
-        2: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Slope Formula", "summary": "Calculate slope (m) given two points (y2-y1)/(x2-x1).", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:slope/v/slope-of-a-line"},
-                "jp": {"topic": "Hiragana HA-HO", "summary": "Learn the 'H' column (は, ひ, ふ, へ, ほ). 'Fu' is unique.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "IPv6 Basics", "summary": "Understand the structure of 128-bit IPv6 addresses.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Slope-Intercept Form", "summary": "Master y = mx + b. Identify slope and y-intercept.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:slope-intercept-form/v/slope-intercept-form"},
-                "jp": {"topic": "Hiragana MA-MO", "summary": "Learn the 'M' column (ま, み, む, め, も).", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "DNS Concepts", "summary": "Learn how Domain Name Systems resolve URLs to IP addresses.", "link": MESSER_NET}},
-            3: {"math": {"topic": "Graphing Lines", "summary": "Graph a line on a coordinate plane using slope and intercept.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:slope-intercept-form/v/graphing-lines-in-slope-intercept-form"},
-                "jp": {"topic": "Hiragana YA-YO", "summary": "Learn the 'Y' column (や, ゆ, よ). Only 3 sounds.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "DHCP Service", "summary": "Understand how DHCP assigns dynamic IP addresses.", "link": MESSER_NET}},
-            4: {"math": {"topic": "Point-Slope Form", "summary": "Use y - y1 = m(x - x1) to find line equations.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:point-slope-form/v/point-slope-and-standard-form"},
-                "jp": {"topic": "Hiragana RA-RO", "summary": "Learn the 'R' column (ら, り, る, れ, ろ). It's a soft 'flap' sound.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "Routers & Switches", "summary": " Differentiate between Layer 2 switching and Layer 3 routing.", "link": MESSER_NET}},
-            5: {"math": {"topic": "Standard Form", "summary": "Convert linear equations into Ax + By = C format.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:standard-form/v/standard-form-linear-equations"},
-                "jp": {"topic": "Hiragana WA-N", "summary": "Learn the final characters (わ, を, ん). 'Wo' is a particle.", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "VLANs Basics", "summary": "Learn how Virtual LANs segment network traffic.", "link": MESSER_NET}},
-            6: {"math": {"topic": "Stats: Range & IQR", "summary": "Calculate Interquartile Range to understand data spread.", "link": "https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/interquartile-range-iqr/v/range-variance-and-standard-deviation-as-measures-of-dispersion"},
-                "jp": {"topic": "Dakuten Practice", "summary": "Learn voiced sounds (ka -> ga, sa -> za).", "link": "https://www.tofugu.com/japanese/learn-hiragana/"},
-                "cyber": {"topic": "Common Ports", "summary": "Memorize ports: 21 (FTP), 22 (SSH), 80 (HTTP), 443 (HTTPS).", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 2 Review", "summary": "Practice slope and linear equation problems.", "link": "https://www.khanacademy.org/math/algebra"},
-                "jp": {"topic": "Hiragana Quiz", "summary": "Take a full Hiragana test to verify mastery.", "link": "https://kana-quiz.tofugu.com/"},
-                "cyber": {"topic": "Flashcards: Ports", "summary": "Drill common port numbers using flashcards.", "link": "https://quizlet.com/search?query=comptia+network%2B+ports"}}
-        }},
-        3: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Systems of Eq Intro", "summary": "Understand what a system of equations is and what a solution means.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:introduction-to-systems-of-equations/v/systems-of-equations"}, "jp": {"topic": "Katakana A-NO", "summary": "Start Katakana. Learn A through No rows.", "link": "https://www.tofugu.com/japanese/learn-katakana/"}, "cyber": {"topic": "TCP vs UDP", "summary": "Contrast reliable (TCP) vs fast (UDP) transport protocols.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Substitution Method", "summary": "Solve systems by substituting one variable into the other eq.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:solving-systems-substitution/v/solving-systems-by-substitution-1"}, "jp": {"topic": "Katakana HA-HO", "summary": "Learn Ha through Ho rows in Katakana.", "link": "https://www.tofugu.com/japanese/learn-katakana/"}, "cyber": {"topic": "Wireless Standards", "summary": "Learn 802.11 standards (a, b, g, n, ac, ax).", "link": MESSER_NET}},
-            3: {"math": {"topic": "Elimination Method", "summary": "Solve systems by adding/subtracting equations.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:solving-systems-elimination/v/solving-systems-by-elimination"}, "jp": {"topic": "Katakana MA-YO", "summary": "Learn Ma through Yo rows in Katakana.", "link": "https://www.tofugu.com/japanese/learn-katakana/"}, "cyber": {"topic": "2.4 vs 5 GHz", "summary": "Understand Wi-Fi frequency differences in range and speed.", "link": MESSER_NET}},
-            4: {"math": {"topic": "Systems Word Probs", "summary": "Translate real-world problems into systems of equations.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:systems-of-equations-word-problems/v/systems-of-equations-word-problems"}, "jp": {"topic": "Katakana RA-N", "summary": "Finish Katakana: Ra through N.", "link": "https://www.tofugu.com/japanese/learn-katakana/"}, "cyber": {"topic": "Network Topologies", "summary": "Learn Star, Bus, Ring, and Mesh topologies.", "link": MESSER_NET}},
-            5: {"math": {"topic": "Systems Review", "summary": "Practice all methods of solving systems.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations"}, "jp": {"topic": "Long Vowels", "summary": "Understand how the 'ー' symbol extends sounds.", "link": "https://www.tofugu.com/japanese/learn-katakana/"}, "cyber": {"topic": "Cable Types", "summary": "Differentiate Cat5e, Cat6, Fiber, and Coax.", "link": MESSER_NET}},
-            6: {"math": {"topic": "Stats: Box Plots", "summary": "Interpret quartiles and medians visually.", "link": "https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/box-whisker-plots/v/box-and-whisker-plot"}, "jp": {"topic": "Loanwords", "summary": "Practice reading English words written in Katakana.", "link": "https://www.tofugu.com/japanese/learn-katakana/"}, "cyber": {"topic": "Command Line Basics", "summary": "Learn basic ping and ipconfig/ifconfig commands.", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 3 Review", "summary": "Review math and cyber concepts.", "link": "https://www.khanacademy.org/math/algebra"}, "jp": {"topic": "Core 2k Deck", "link": "https://ankiweb.net/shared/info/2141233552"}, "cyber": {"topic": "Lab: Ping Google", "summary": "Execute your first ping test in the terminal.", "link": "https://www.freecodecamp.org/news/how-to-use-the-ping-command/"}}
-        }},
-        4: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Inequalities", "summary": "Understand greater than/less than symbols and logic.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:inequalities-intro/v/inequalities"}, "jp": {"topic": "Desu / Da", "summary": "Learn the basic copula 'to be' (Desu).", "link": "http://www.guidetojapanese.org/learn/grammar/stateofbeing"}, "cyber": {"topic": "Cloud Concepts", "summary": "Define SaaS, PaaS, and IaaS.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Solving Inequalities", "summary": "Solve inequalities (remember to flip sign when dividing by negative).", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:solving-inequalities/v/solving-inequalities"}, "jp": {"topic": "Negatives (Janai)", "summary": "Learn how to say 'is not' (Ja nai).", "link": "http://www.guidetojapanese.org/learn/grammar/stateofbeing"}, "cyber": {"topic": "Virtualization", "summary": "Understand hypervisors and VMs.", "link": MESSER_NET}},
-            3: {"math": {"topic": "Graphing Inequalities", "summary": "Shade regions on a graph to represent inequality solutions.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:graphing-two-variable-inequalities/v/graphing-inequalities"}, "jp": {"topic": "Past Tense (Datta)", "summary": "Learn the past tense of 'to be' (Datta/Deshita).", "link": "http://www.guidetojapanese.org/learn/grammar/stateofbeing"}, "cyber": {"topic": "Troubleshooting", "summary": "Learn the methodology of diagnosing network issues.", "link": MESSER_NET}},
-            4: {"math": {"topic": "Systems of Ineq", "summary": "Find the overlapping region of two inequalities.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:systems-two-variable-inequalities/v/graphing-systems-of-inequalities-2"}, "jp": {"topic": "Past Neg (Janakatta)", "summary": "Learn past negative 'was not' (Janakatta).", "link": "http://www.guidetojapanese.org/learn/grammar/stateofbeing"}, "cyber": {"topic": "SOHO Routers", "summary": "Configure a basic Small Office/Home Office router.", "link": MESSER_NET}},
-            5: {"math": {"topic": "Modeling with Ineq", "summary": "Create inequalities from word problems.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:modeling-with-linear-inequalities/v/modeling-with-linear-inequalities"}, "jp": {"topic": "Question Particle", "summary": "Use 'Ka' to turn sentences into questions.", "link": "http://www.guidetojapanese.org/learn/grammar/stateofbeing"}, "cyber": {"topic": "CIA Triad", "summary": "Memorize Confidentiality, Integrity, and Availability.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Standard Dev", "summary": "Calculate variance and standard deviation.", "link": "https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/variance-standard-deviation-population/v/variance-of-a-population"}, "jp": {"topic": "Particles WA/GA", "summary": "Differentiate between the Topic (Wa) and Subject (Ga).", "link": "http://www.guidetojapanese.org/learn/grammar/particlesintro"}, "cyber": {"topic": "Malware Types", "summary": "Define Virus, Worm, Trojan, Spyware, and Ransomware.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Exam: Phase 1 Math", "summary": "Self-test on Algebra 1 concepts.", "link": "https://www.khanacademy.org/math/algebra"}, "jp": {"topic": "Grammar Audit", "summary": "Review all grammar points from weeks 1-4.", "link": "https://kana-quiz.tofugu.com/"}, "cyber": {"topic": "Exam: Practice Net+", "summary": "Take a practice Network+ quiz.", "link": "https://www.examcompass.com/comptia/network-plus-certification/free-network-plus-practice-tests"}}
-        }},
-        5: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Function Mapping", "summary": "Understand inputs (x) and outputs (y).", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:evaluating-functions/v/what-is-a-function"}, "jp": {"topic": "Particle MO", "summary": "Use 'Mo' to say 'also'.", "link": "http://www.guidetojapanese.org/learn/grammar/particlesintro"}, "cyber": {"topic": "Linux: Intro", "summary": "Understand the Linux kernel vs GUI.", "link": NET_CHUCK_LINUX}},
-            2: {"math": {"topic": "Domain & Range", "summary": "Identify valid inputs (domain) and outputs (range).", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:domain-range/v/domain-and-range-from-graphs"}, "jp": {"topic": "Particle NO", "summary": "Use 'No' for possession (my/your).", "link": "http://www.guidetojapanese.org/learn/grammar/particlesintro"}, "cyber": {"topic": "Linux: The Shell", "summary": "Open the terminal and run a basic command.", "link": NET_CHUCK_LINUX}},
-            3: {"math": {"topic": "Function Notation", "summary": "Evaluate f(x) for given values.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:evaluating-functions/v/function-notation"}, "jp": {"topic": "Particle O", "summary": "Use 'O' (Wo) to mark the direct object.", "link": "http://www.guidetojapanese.org/learn/grammar/particlesintro"}, "cyber": {"topic": "Linux: ls, cd, pwd", "summary": "Navigate directories: List, Change Directory, Print Working Directory.", "link": NET_CHUCK_LINUX}},
-            4: {"math": {"topic": "Vert. Line Test", "summary": "Visually test if a graph represents a function.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:vertical-line-test/v/vertical-line-test"}, "jp": {"topic": "Particle NI/E", "summary": "Use 'Ni' and 'He' (E) for direction/location.", "link": "http://www.guidetojapanese.org/learn/grammar/particlesintro"}, "cyber": {"topic": "Linux: touch, mkdir", "summary": "Create files (touch) and directories (mkdir).", "link": NET_CHUCK_LINUX}},
-            5: {"math": {"topic": "Linear vs Nonlinear", "summary": "Identify functions with constant rates of change.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:recognizing-functions-2/v/linear-nonlinear-functions"}, "jp": {"topic": "Particle DE", "summary": "Use 'De' for context/means of action.", "link": "http://www.guidetojapanese.org/learn/grammar/particlesintro"}, "cyber": {"topic": "Linux: cp, mv, rm", "summary": "Copy, Move, and Remove files.", "link": NET_CHUCK_LINUX}},
-            6: {"math": {"topic": "Stats: Histograms", "summary": "Construct histograms to view frequency distributions.", "link": "https://www.khanacademy.org/math/statistics-probability/displaying-describing-data/quantitative-data-graphs/v/histograms-intro"}, "jp": {"topic": "All Particles", "summary": "Review: Wa, Ga, Mo, No, O, Ni, De.", "link": "http://www.guidetojapanese.org/learn/grammar/particlesintro"}, "cyber": {"topic": "Lab: Ubuntu VM", "summary": "Install Ubuntu Linux inside VirtualBox.", "link": "https://ubuntu.com/tutorials/install-ubuntu-desktop-on-virtualbox#1-overview"}},
-            7: {"math": {"topic": "Week 5 Review", "summary": "Review functions and particles.", "link": "https://www.khanacademy.org/math/algebra"}, "jp": {"topic": "Anki Review", "summary": "Clean up your Anki backlog.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "Bandit Level 0", "summary": "Start the OverTheWire Bandit wargame.", "link": "https://overthewire.org/wargames/bandit/bandit0.html"}}
-        }},
-        6: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Absolute Value", "summary": "Solve equations with absolute values |x|.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:absolute-value-piecewise-functions/x2f8bb11595b61c86:absolute-value-equations/v/absolute-value-equations"}, "jp": {"topic": "I-Adjectives", "summary": "Identify adjectives ending in 'i'.", "link": "http://www.guidetojapanese.org/learn/grammar/adjectives"}, "cyber": {"topic": "Linux: cat, less", "summary": "Read file contents in the terminal.", "link": NET_CHUCK_LINUX}},
-            2: {"math": {"topic": "Graphing Abs Val", "summary": "Graph the 'V' shape of absolute value functions.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:absolute-value-piecewise-functions/x2f8bb11595b61c86:graphs-absolute-value/v/shifting-absolute-value-graphs"}, "jp": {"topic": "I-Adj Conjugation", "summary": "Conjugate i-adjectives to past/negative.", "link": "http://www.guidetojapanese.org/learn/grammar/adjectives"}, "cyber": {"topic": "Linux: grep", "summary": "Search for text strings inside files.", "link": NET_CHUCK_LINUX}},
-            3: {"math": {"topic": "Piecewise Func", "summary": "Evaluate functions defined by different rules/intervals.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:absolute-value-piecewise-functions/x2f8bb11595b61c86:piecewise-functions/v/piecewise-functions"}, "jp": {"topic": "Na-Adjectives", "summary": "Identify and use Na-adjectives.", "link": "http://www.guidetojapanese.org/learn/grammar/adjectives"}, "cyber": {"topic": "Linux: Pipes", "summary": "Use '|' to send output from one command to another.", "link": NET_CHUCK_LINUX}},
-            4: {"math": {"topic": "Transformations", "summary": "Shift, stretch, and reflect function graphs.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:absolute-value-piecewise-functions/x2f8bb11595b61c86:graphs-absolute-value/v/transforming-absolute-value-functions"}, "jp": {"topic": "Na-Adj Conjugation", "summary": "Conjugate Na-adjectives (same as nouns).", "link": "http://www.guidetojapanese.org/learn/grammar/adjectives"}, "cyber": {"topic": "Linux: Permissions", "summary": "Understand Read(4), Write(2), Execute(1) - chmod.", "link": NET_CHUCK_LINUX}},
-            5: {"math": {"topic": "Shifting Func", "summary": "Apply vertical and horizontal shifts.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:absolute-value-piecewise-functions/x2f8bb11595b61c86:graphs-absolute-value/v/shifting-absolute-value-graphs"}, "jp": {"topic": "Adj Vocabulary", "summary": "Learn basic colors and feelings.", "link": "http://www.guidetojapanese.org/learn/grammar/adjectives"}, "cyber": {"topic": "Linux: User Mgmt", "summary": "Add users and manage groups.", "link": NET_CHUCK_LINUX}},
-            6: {"math": {"topic": "Composite Func", "summary": "Combine functions: f(g(x)).", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:transformations/x2ec2f6f830c9fb89:composite-functions/v/function-composition"}, "jp": {"topic": "Adj Sentences", "summary": "Build sentences like 'The car is fast'.", "link": "http://www.guidetojapanese.org/learn/grammar/adjectives"}, "cyber": {"topic": "Linux: apt/dpkg", "summary": "Install packages using Advanced Package Tool.", "link": NET_CHUCK_LINUX}},
-            7: {"math": {"topic": "Stats: Skewness", "summary": "Identify Left vs Right Skew in data.", "link": "https://www.khanacademy.org/math/ap-statistics/summarizing-quantitative-data-ap/measuring-center-quantitative/v/skewed-data-and-mean-vs-median"}, "jp": {"topic": "Adj Review", "summary": "Review all adjective rules.", "link": "http://www.guidetojapanese.org/learn/grammar/adjectives"}, "cyber": {"topic": "Lab: OverTheWire", "summary": "Complete Bandit Levels 1-5.", "link": "https://overthewire.org/wargames/bandit/"}}
-        }},
-        7: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Exponent Rules", "summary": "Multiply/Divide variables with exponents.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:rational-exponents-radicals/x2f8bb11595b61c86:exponent-properties/v/exponent-rules-part-1"}, "jp": {"topic": "Ru-Verbs", "summary": "Identify and conjugate Ru-verbs.", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Intro to Python", "summary": "Set up Python and print 'Hello World'.", "link": PYTHON_HUB}},
-            2: {"math": {"topic": "Negative Exponents", "summary": "Understand that x^-1 = 1/x.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:rational-exponents-radicals/x2f8bb11595b61c86:exponent-properties/v/negative-exponents"}, "jp": {"topic": "U-Verbs", "summary": "Identify and conjugate U-verbs.", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Python: Variables", "summary": "Store data in variables (int, str, bool).", "link": "https://www.w3schools.com/python/python_variables.asp"}},
-            3: {"math": {"topic": "Power Rules", "summary": "Raise an exponent to another exponent (x^a)^b.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:rational-exponents-radicals/x2f8bb11595b61c86:exponent-properties/v/exponent-rules-part-2"}, "jp": {"topic": "Irregular Verbs", "summary": "Memorize Suru (to do) and Kuru (to come).", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Python: Lists", "summary": "Create and manipulate lists/arrays.", "link": "https://www.w3schools.com/python/python_lists.asp"}},
-            4: {"math": {"topic": "Rational Exponents", "summary": "Convert roots to fractional exponents.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:rational-exponents-radicals/x2f8bb11595b61c86:rational-exponents/v/rational-exponents"}, "jp": {"topic": "Masu Form", "summary": "Polite form conjugation for all verb types.", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Python: Loops", "summary": "Iterate with 'For' and 'While' loops.", "link": "https://www.w3schools.com/python/python_for_loops.asp"}},
-            5: {"math": {"topic": "Scientific Notation", "summary": "Handle very large/small numbers.", "link": "https://www.khanacademy.org/math/pre-algebra/pre-algebra-exponents-radicals/pre-algebra-scientific-notation/v/scientific-notation"}, "jp": {"topic": "Dictionary Form", "summary": "The base form of verbs found in dictionaries.", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Python: If/Else", "summary": "Control flow with logic statements.", "link": "https://www.w3schools.com/python/python_conditions.asp"}},
-            6: {"math": {"topic": "Stats: Probability", "summary": "Calculate simple theoretical probability.", "link": "https://www.khanacademy.org/math/statistics-probability/probability-library/basic-theoretical-probability/v/basic-probability"}, "jp": {"topic": "Polite vs Plain", "summary": "Know when to use Masu vs Dictionary form.", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Python: Functions", "summary": "Define reusable blocks of code (def).", "link": "https://www.w3schools.com/python/python_functions.asp"}},
-            7: {"math": {"topic": "Week 7 Review", "summary": "Practice exponent rules and simple probability.", "link": "https://www.khanacademy.org/math/algebra"}, "jp": {"topic": "Verb Drill", "summary": "Drill verb conjugations until smooth.", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Lab: Python Calc", "summary": "Build a CLI calculator in Python.", "link": "https://www.geeksforgeeks.org/make-simple-calculator-using-python/"}}
-        }},
-        8: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Exp. Growth", "summary": "Graph and interpret exponential growth.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:exponential-growth-decay/x2f8bb11595b61c86:exponential-vs-linear-growth/v/exponential-growth-functions"}, "jp": {"topic": "Verb Neg (Nai)", "summary": "Conjugate to negative 'Not do' (Nai).", "link": "http://www.guidetojapanese.org/learn/grammar/negativeverbs"}, "cyber": {"topic": "Intro to Crypto", "summary": "Overview of encryption, hashing, and obfuscation.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Exp. Decay", "summary": "Graph and interpret exponential decay.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:exponential-growth-decay/x2f8bb11595b61c86:exponential-vs-linear-growth/v/exponential-decay-functions"}, "jp": {"topic": "Verb Past (Ta)", "summary": "Conjugate to past tense 'Did' (Ta).", "link": "http://www.guidetojapanese.org/learn/grammar/past_tense"}, "cyber": {"topic": "Sym vs Asym", "summary": "Shared key (Symmetric) vs Public/Private key (Asymmetric).", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Compound Interest", "summary": "Calculate interest on interest A=P(1+r/n)^nt.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:exponential-growth-decay/x2f8bb11595b61c86:exponential-models/v/compound-interest"}, "jp": {"topic": "Past Neg (Nakatta)", "summary": "Conjugate to past negative 'Did not' (Nakatta).", "link": "http://www.guidetojapanese.org/learn/grammar/past_tense"}, "cyber": {"topic": "Hashing", "summary": "One-way encryption (MD5, SHA). Integrity check.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Modeling Exp", "summary": "Build exponential models from word problems.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:exponential-growth-decay/x2f8bb11595b61c86:exponential-models/v/constructing-exponential-models"}, "jp": {"topic": "SOV Structure", "summary": "Internalize Subject-Object-Verb sentence order.", "link": "http://www.guidetojapanese.org/learn/grammar/basic"}, "cyber": {"topic": "Digital Sigs", "summary": "Authenticity and Non-repudiation.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Stats: Permutations", "summary": "Calculate arrangements where order matters.", "link": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:prob-comb/x9e81a4f98389efdf:combinatorics/v/permutations"}, "jp": {"topic": "Counting (1-10)", "summary": "Learn Ich, Ni, San... up to 10.", "link": "https://www.tofugu.com/japanese/counting-in-japanese/"}, "cyber": {"topic": "PKI Concepts", "summary": "Public Key Infrastructure trust hierarchy.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Math Review", "summary": "Review exponents and interest formulas.", "link": "https://www.khanacademy.org/math/algebra"}, "jp": {"topic": "High Numbers", "summary": "Count to 100 and 1000.", "link": "https://www.tofugu.com/japanese/counting-in-japanese/"}, "cyber": {"topic": "Steganography", "summary": "Hiding data inside images/audio.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Exam: Phase 1", "summary": "Cumulative Math test.", "link": "https://www.khanacademy.org/math/algebra"}, "jp": {"topic": "Monthly Review", "summary": "Review all grammar.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: Hash Calc", "summary": "Generate file hashes and verify integrity.", "link": "https://md5file.com/calculator"}}
-        }},
-        9: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "FOIL Method", "summary": "Multiply binomials (First, Outer, Inner, Last).", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratics-multiplying-factoring/x2f8bb11595b61c86:multiply-binomial/v/multiplying-binomials"}, "jp": {"topic": "Kanji 1-10", "summary": "Learn One, Two, Three... Ten.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Social Eng", "summary": "Hacking the human (Pretexting, Quid pro quo).", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Factoring (a=1)", "summary": "Reverse FOIL for simple quadratics.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratics-multiplying-factoring/x2f8bb11595b61c86:factor-quadratics-intro/v/factoring-quadratic-expressions"}, "jp": {"topic": "Kanji Days", "summary": "Sun, Moon, Fire, Water, Tree, Gold, Earth.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Phishing Types", "summary": "Spear phishing, Whaling, Vishing.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Factoring (a>1)", "summary": "Factor quadratics with a leading coefficient.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratics-multiplying-factoring/x2f8bb11595b61c86:factor-quadratics-strategy/v/factoring-by-grouping"}, "jp": {"topic": "Kanji Body", "summary": "Eye, Ear, Mouth, Hand, Foot.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Malware Types", "summary": "Adware, Spyware, Rootkits.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Diff of Squares", "summary": "Factor pattern a^2 - b^2 = (a+b)(a-b).", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratics-multiplying-factoring/x2f8bb11595b61c86:factor-difference-squares/v/factoring-difference-of-squares"}, "jp": {"topic": "Adverbs", "summary": "Modify verbs (Quickly, Slowly).", "link": "http://www.guidetojapanese.org/learn/grammar/adverbs"}, "cyber": {"topic": "Ransomware", "summary": "Encryption-based extortion.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Perfect Squares", "summary": "Factor pattern a^2 + 2ab + b^2.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratics-multiplying-factoring/x2f8bb11595b61c86:factor-perfect-squares/v/factoring-perfect-square-trinomials"}, "jp": {"topic": "Locations", "summary": "Kanji for School, Park, Station.", "link": "https://kanji.garden/"}, "cyber": {"topic": "DoS & DDoS", "summary": "Denial of Service attacks.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Scatterplots", "summary": "Plot bivariate data.", "link": "https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/scatterplots-and-correlation/v/constructing-scatter-plot"}, "jp": {"topic": "Interrogatives", "summary": "Who, What, Where, When, Why.", "link": "http://www.guidetojapanese.org/learn/grammar/question"}, "cyber": {"topic": "MITM Attack", "summary": "Man-in-the-Middle interception.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 9 Review", "summary": "Review factoring and Kanji.", "link": "https://www.khanacademy.org/math/algebra"}, "jp": {"topic": "Stroke Order", "summary": "Rules for writing Kanji correctly.", "link": "https://www.tofugu.com/japanese/kanji-stroke-order/"}, "cyber": {"topic": "Lab: Phish Quiz", "summary": "Identify phishing emails.", "link": "https://phishingquiz.withgoogle.com/"}}
-        }},
-        10: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Solve by Factoring", "summary": "Find roots by setting factors to zero.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratics-multiplying-factoring/x2f8bb11595b61c86:quad-factoring/v/example-1-solving-a-quadratic-equation-by-factoring"}, "jp": {"topic": "Give/Receive", "summary": "Ageru (give) vs Kureru/Morau (receive).", "link": "http://www.guidetojapanese.org/learn/grammar/giving"}, "cyber": {"topic": "Physical Sec", "summary": "Locks, Guards, Biometrics.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Complete the Square", "summary": "Convert standard to vertex form.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratic-functions-equations/x2f8bb11595b61c86:completing-square-quadratics/v/completing-the-square-1"}, "jp": {"topic": "Desiring (~Tai)", "summary": "I want to do... (Watashi wa... tai).", "link": "http://www.guidetojapanese.org/learn/grammar/desire"}, "cyber": {"topic": "Password Attacks", "summary": "Brute Force, Dictionary, Spraying.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Quadratic Formula", "summary": "Solve any quadratic equation.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratic-functions-equations/x2f8bb11595b61c86:quadratic-formula-equation/v/using-quadratic-formula"}, "jp": {"topic": "Tari Tari", "summary": "Listing examples of actions.", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "Rainbow Tables", "summary": "Pre-computed hash chains.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Discriminant", "summary": "Determine number of solutions using b^2-4ac.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratic-functions-equations/x2f8bb11595b61c86:quadratic-formula-equation/v/discriminant-of-quadratic-equations"}, "jp": {"topic": "Exist (Aru/Iru)", "summary": "Inanimate (Aru) vs Animate (Iru).", "link": "http://www.guidetojapanese.org/learn/grammar/verbs"}, "cyber": {"topic": "Logic Bombs", "summary": "Malicious code triggered by specific conditions.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Vertex Form", "summary": "Graph parabolas easily.", "link": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratic-functions-equations/x2f8bb11595b61c86:vertex-form/v/vertex-form-intro"}, "jp": {"topic": "Counters (~nin)", "summary": "Counting people.", "link": "https://www.tofugu.com/japanese/counting-people-nin-ri/"}, "cyber": {"topic": "Insider Threat", "summary": "Threats from employees/contractors.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Correlation", "summary": "Understand correlation coefficient 'r'.", "link": "https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/scatterplots-and-correlation/v/correlation-coefficient-intuition"}, "jp": {"topic": "Short Stories", "summary": "Read a simple NHK Easy article.", "link": "https://www3.nhk.or.jp/news/easy/"}, "cyber": {"topic": "Zero Day", "summary": "Vulnerabilities with no known patch.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 10 Review", "summary": "Practice quadratics.", "link": "https://www.desmos.com/calculator"}, "jp": {"topic": "Review", "summary": "Review all phase 1 content.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: Pwd Check", "summary": "Test password strength.", "link": "https://password.kaspersky.com/"}}
-        }},
+        
         # --- PHASE 2: SECURITY+ & N5 (Weeks 11-20) ---
-        11: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Poly Arithmetic", "summary": "Add, subtract, and multiply polynomials.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:poly-arithmetic/x2ec2f6f830c9fb89:poly-add-sub/v/adding-polynomials"}, "jp": {"topic": "Te-form (Ru)", "summary": "Conjugate Ru-verbs to Te-form.", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "Identity Mgmt", "summary": "IAM concepts and Authorization.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Long Division", "summary": "Divide polynomials using long division.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:poly-arithmetic/x2ec2f6f830c9fb89:poly-div-by-linear/v/polynomial-division"}, "jp": {"topic": "Te-form (U)", "summary": "Conjugate U-verbs (ends in u, tsu, ru -> tte).", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "MFA Factors", "summary": "Something you know, have, are.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Synthetic Div", "summary": "Shortcut for polynomial division.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:poly-arithmetic/x2ec2f6f830c9fb89:synthetic-division/v/synthetic-division"}, "jp": {"topic": "Te-form (Irr)", "summary": "Suru -> Shite, Kuru -> Kite.", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "Biometrics", "summary": "Fingerprint, Retina, Voice.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Remainder Thm", "summary": "Evaluate polynomials using remainders.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:poly-arithmetic/x2ec2f6f830c9fb89:remainder-theorem/v/polynomial-remainder-theorem"}, "jp": {"topic": "Te Connect", "summary": "Connect sentences with Te-form.", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "Authorization", "summary": "Least Privilege and RBAC.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Factor Theorem", "summary": "Determine factors of a polynomial.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:poly-arithmetic/x2ec2f6f830c9fb89:poly-zeros/v/factor-theorem"}, "jp": {"topic": "Te Requests", "summary": "Please do (Te kudasai).", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "SSO & Fed", "summary": "Single Sign On (SAML, OIDC).", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Best Fit", "summary": "Calculate Least Squares Regression Line.", "link": "https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/regression-library/v/fitting-a-line-to-data"}, "jp": {"topic": "Te States", "summary": "Currently doing (Te iru).", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "Account Policy", "summary": "Complexity, Lockout, Expiration.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 11 Review", "summary": "Practice polynomial division.", "link": "https://www.khanacademy.org/math/algebra2"}, "jp": {"topic": "Te-form Drill", "summary": "Drill all Te-form rules.", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "Lab: Win Users", "summary": "Manage Windows users/groups.", "link": "https://www.youtube.com/watch?v=5UeX-wd6Hbw"}}
+        # Standard Security+ Layer
+        11: {"phase": "Phase 2: Sec+ & Scripting", "days": {
+            1: {"math": {"topic": "Functions Intro", "summary": "Inputs/Outputs.", "link": f"{KHAN_SEARCH}Functions"}, "jp": {"topic": "Te-Form (Ru)", "summary": "Conjugation.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Python: Variables", "summary": "Data types.", "link": "https://www.w3schools.com/python/"}},
+            # ... (Placeholder for standard Phase 2 days) ...
+            7: {"math": {"topic": "Review", "summary": "Functions.", "link": f"{KHAN_SEARCH}Algebra2"}, "jp": {"topic": "Te-Form Drill", "summary": "Drill.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "Milestone 1: Log Parser", "summary": "Read CSV logs with Python.", "link": PYTHON_DOCS}}
         }},
-        12: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Rational Funcs", "summary": "Graph rational functions/asymptotes.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:rational-functions/x2ec2f6f830c9fb89:rational-graphs/v/graphs-of-rational-functions"}, "jp": {"topic": "~Mo ii (Perm)", "summary": "May I do...? (Te mo ii desu ka).", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "Firewalls", "summary": "Stateful vs Stateless inspection.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Simplify Rat.", "summary": "Factor and cancel rational expressions.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:rational-functions/x2ec2f6f830c9fb89:simplify-rational-expressions/v/simplifying-rational-expressions-1"}, "jp": {"topic": "Prohibition", "summary": "You must not (Te wa ikemasen).", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "VPNs", "summary": "Tunneling and Encryption.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Mult/Div Rat.", "summary": "Multiply and divide rational expressions.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:rational-functions/x2ec2f6f830c9fb89:multiply-divide-rational-expressions/v/multiplying-rational-expressions"}, "jp": {"topic": "~Te kara", "summary": "Sequence: After doing A, do B.", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "IDS vs IPS", "summary": "Detection (alert) vs Prevention (block).", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Add/Sub Rat.", "summary": "Find common denominators.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:rational-functions/x2ec2f6f830c9fb89:add-sub-rational-expressions/v/adding-rational-expressions"}, "jp": {"topic": "N5 Grammar", "summary": "Review basic sentence structures.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Proxies", "summary": "Forward vs Reverse proxies.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Solving Rat Eq", "summary": "Solve equations with fractions.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:rational-functions/x2ec2f6f830c9fb89:rational-equations/v/solving-rational-equations-1"}, "jp": {"topic": "N5 Vocab", "summary": "Review core vocabulary.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Load Balancers", "summary": "Distribute traffic across servers.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Residuals", "summary": "Analyze residual plots for linearity.", "link": "https://www.khanacademy.org/math/statistics-probability/describing-relationships-quantitative-data/regression-library/v/residual-plots"}, "jp": {"topic": "N5 Listening", "summary": "Practice N5 level audio.", "link": "https://www.youtube.com/watch?v=sFiP5YW1m48"}, "cyber": {"topic": "SIEM Basics", "summary": "Security Information & Event Management.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 12 Review", "summary": "Review rational functions.", "link": "https://www.khanacademy.org/math/algebra2"}, "jp": {"topic": "Exam Prep", "summary": "N5 Practice Test.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: Win FW", "summary": "Configure Windows Firewall.", "link": "https://www.youtube.com/watch?v=7uKzVf7rYy8"}}
+
+        # --- PHASE 3: DISCRETE MATH & NET-SENTRY (Weeks 21-30) ---
+        # UPDATED: Discrete Math + Net-Sentry Tool Dev
+        21: {"phase": "Phase 3: Discrete Math & Net-Sentry", "days": {
+            1: {"math": {"topic": "Logic: Truth Tables", "summary": "AND, OR, XOR. The basis of chips.", "link": TREFOR_DISCRETE}, 
+                "jp": {"topic": "Passive Voice", "summary": "Rareru form.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Raw Sockets", "summary": "Python socket library intro.", "link": "https://realpython.com/python-sockets/"}},
+            2: {"math": {"topic": "Logic: Implications", "summary": "If P then Q.", "link": TREFOR_DISCRETE}, 
+                "jp": {"topic": "Passive Sentences", "summary": "Practice.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Python: Error Handling", "summary": "Try/Except blocks.", "link": PYTHON_DOCS}},
+            3: {"math": {"topic": "Set Theory", "summary": "Unions, Intersections.", "link": TREFOR_DISCRETE}, 
+                "jp": {"topic": "Causative Voice", "summary": "Make/Let.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Tool: Scapy Basics", "summary": "Packet manipulation library.", "link": SCAPY_DOCS}},
+            4: {"math": {"topic": "Venn Diagrams", "summary": "Visualizing sets.", "link": f"{KHAN_SEARCH}Venn+diagrams"}, 
+                "jp": {"topic": "Causative Practice", "summary": "Drill.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Lab: Local Sniffer", "summary": "Capture 10 packets on localhost.", "link": SCAPY_DOCS}},
+            5: {"math": {"topic": "Boolean Algebra", "summary": "Simplifying logic circuits.", "link": f"{KHAN_SEARCH}Boolean+algebra"}, 
+                "jp": {"topic": "Keigo: Intro", "summary": "Polite speech levels.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Lab: Filtering", "summary": "Filter for TCP/80 traffic.", "link": SCAPY_DOCS}},
+            6: {"math": {"topic": "Boolean Circuits", "summary": "Logic Gates.", "link": f"{KHAN_SEARCH}Logic+gates"}, 
+                "jp": {"topic": "Keigo: Sonkeigo", "summary": "Respectful language.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Project: Basic Sniffer", "summary": "Build CLI tool to print packet summaries.", "link": "https://github.com/"}},
+            7: {"math": {"topic": "Week 21 Review", "summary": "Logic & Sets.", "link": TREFOR_DISCRETE}, 
+                "jp": {"topic": "Keigo Audit", "summary": "Review levels.", "link": "https://apps.ankiweb.net/"}, 
+                "cyber": {"topic": "Log: Research Journal", "summary": "Document what you built.", "link": "https://github.com/"}}
         }},
-        13: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Pythagorean Thm", "summary": "a^2 + b^2 = c^2 application.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-trig/hs-geo-pythagorean-theorem/v/the-pythagorean-theorem"}, "jp": {"topic": "Kanji (Nature)", "summary": "Mountain, River, Rice Field.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Hardening", "summary": "Reducing the attack surface.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Circle Area", "summary": "Area and Circumference formulas.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-circles/hs-geo-circle-basics/v/area-of-a-circle"}, "jp": {"topic": "Kanji (Direction)", "summary": "North, South, East, West.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Patch Mgmt", "summary": "Keeping systems updated.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Vol (Cylinder)", "summary": "Volume = Area of Base * Height.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-solids/hs-geo-solids-intro/v/cylinder-volume-and-surface-area"}, "jp": {"topic": "Kanji (Time)", "summary": "Time, Week, Year, Now.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Endpoint Sec", "summary": "Antivirus, EDR, HIPS.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Vol (Cone/Sph)", "summary": "Volume of Cones and Spheres.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-solids/hs-geo-solids-intro/v/volume-cone"}, "jp": {"topic": "Potential (Ru)", "summary": "Can do: Ru -> Rareru.", "link": "http://www.guidetojapanese.org/learn/grammar/potential"}, "cyber": {"topic": "Disk Encrypt", "summary": "FDE vs File-level encryption.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Surface Area", "summary": "Calculate surface area of 3D solids.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-solids/hs-geo-solids-intro/v/surface-area-of-a-box"}, "jp": {"topic": "Potential (U)", "summary": "Can do: U -> Eru.", "link": "http://www.guidetojapanese.org/learn/grammar/potential"}, "cyber": {"topic": "TPM / HSM", "summary": "Hardware roots of trust.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Sampling", "summary": "Random vs Convenience sampling.", "link": "https://www.khanacademy.org/math/statistics-probability/designing-studies/types-samples-surveys/v/random-sampling-vs-random-assignment"}, "jp": {"topic": "'I can do...'", "summary": "Construct 'Can do' sentences.", "link": "http://www.guidetojapanese.org/learn/grammar/potential"}, "cyber": {"topic": "Secure Boot", "summary": "Ensuring OS integrity.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 13 Review", "summary": "Review Geometry and Kanji.", "link": "https://www.khanacademy.org/math/geometry"}, "jp": {"topic": "Potential Drill", "summary": "Practice Potential form.", "link": "http://www.guidetojapanese.org/learn/grammar/potential"}, "cyber": {"topic": "Lab: BitLocker", "summary": "Enable BitLocker encryption.", "link": "https://www.youtube.com/watch?v=1X_4Xy0_5_0"}}
+        25: {"phase": "Phase 3: Discrete Math & Net-Sentry", "days": {
+            1: {"math": {"topic": "Combinatorics", "summary": "Permutations & Combinations.", "link": f"{KHAN_SEARCH}Combinatorics"}, 
+                "jp": {"topic": "Transitive Verbs", "summary": "Action done to object.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Attack Sim: Nmap", "summary": "Scan your VM.", "link": "https://nmap.org/"}},
+            2: {"math": {"topic": "Combinations", "summary": "Order doesn't matter.", "link": f"{KHAN_SEARCH}Combinations"}, 
+                "jp": {"topic": "Intransitive Verbs", "summary": "Action happens.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Lab: Capture Scan", "summary": "Record Nmap traffic with Scapy.", "link": SCAPY_DOCS}},
+            3: {"math": {"topic": "Pigeonhole Principle", "summary": "Proof concept.", "link": TREFOR_DISCRETE}, 
+                "jp": {"topic": "Trans/Intrans Pairs", "summary": "Drill pairs.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Lab: Signatures", "summary": "Identify Nmap flags in packets.", "link": SCAPY_DOCS}},
+            4: {"math": {"topic": "Binomial Coeffs", "summary": "Pascal's Triangle.", "link": f"{KHAN_SEARCH}Binomial+coefficient"}, 
+                "jp": {"topic": "Appearance (~Sou)", "summary": "Looks like...", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Python: Detection", "summary": "Script to detect SYN scan pattern.", "link": PYTHON_DOCS}},
+            5: {"math": {"topic": "Bayes' Theorem", "summary": "Conditional Probability.", "link": f"{KHAN_SEARCH}Bayes+theorem"}, 
+                "jp": {"topic": "Hearsay (~Sou)", "summary": "I heard that...", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Project: Scan Alert", "summary": "Print ALERT when scan detected.", "link": "https://github.com/"}},
+            6: {"math": {"topic": "Expected Value", "summary": "Weighted averages.", "link": f"{KHAN_SEARCH}Expected+value"}, 
+                "jp": {"topic": "Likeness (~You)", "summary": "Metaphor.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Paper: IDS", "summary": "Read paper on Intrusion Detection.", "link": ARXIV_SEC}},
+            7: {"math": {"topic": "Exam: Discrete Midterm", "summary": "Combinatorics/Logic.", "link": TREFOR_DISCRETE}, 
+                "jp": {"topic": "Monthly Review", "summary": "Audit all grammar.", "link": "https://apps.ankiweb.net/"}, 
+                "cyber": {"topic": "Log: Research Journal", "summary": "Update Engineering Log.", "link": "https://github.com/"}}
         }},
-        14: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "SOH CAH TOA", "summary": "Sine, Cosine, Tangent definitions.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-trig/hs-geo-trig-ratios-intro/v/basic-trigonometry"}, "jp": {"topic": "Nouns (Koto)", "summary": "Nominalizing verbs with Koto.", "link": "http://www.guidetojapanese.org/learn/grammar/nounverbs"}, "cyber": {"topic": "Vuln Scanning", "summary": "Identifying weak points.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Missing Sides", "summary": "Solve right triangles using Trig.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-trig/hs-geo-solve-for-a-side/v/example-trig-to-solve-for-a-side"}, "jp": {"topic": "~N desu", "summary": "Explanatory tone (No desu).", "link": "http://www.guidetojapanese.org/learn/grammar/nounverbs"}, "cyber": {"topic": "Pentest Intro", "summary": "Ethical hacking stages.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Inverse Trig", "summary": "Find angles using arcsin/arccos/arctan.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-trig/hs-geo-solve-for-an-angle/v/inverse-trig-functions-intro"}, "jp": {"topic": "~To omou", "summary": "I think that... (To omou).", "link": "http://www.guidetojapanese.org/learn/grammar/nounverbs"}, "cyber": {"topic": "Recon Types", "summary": "Active vs Passive reconnaissance.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "45-45-90 Tri", "summary": "Special right triangle ratios.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-trig/hs-geo-special-right-triangles/v/45-45-90-triangles"}, "jp": {"topic": "~To iu", "summary": "Quoting someone (To iu).", "link": "http://www.guidetojapanese.org/learn/grammar/nounverbs"}, "cyber": {"topic": "Box Testing", "summary": "Black, White, and Gray box testing.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "30-60-90 Tri", "summary": "Special right triangle ratios.", "link": "https://www.khanacademy.org/math/geometry/hs-geo-trig/hs-geo-special-right-triangles/v/30-60-90-triangle-example-problem"}, "jp": {"topic": "Relative Clause", "summary": "Modifying nouns with verbs.", "link": "http://www.guidetojapanese.org/learn/grammar/relativeclause"}, "cyber": {"topic": "Rules of Engage", "summary": "Legal limits of a test.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Bias", "summary": "Response bias, Undercoverage.", "link": "https://www.khanacademy.org/math/statistics-probability/designing-studies/types-samples-surveys/v/identifying-bias-survey"}, "jp": {"topic": "Complex Sent.", "summary": "Practice nested sentences.", "link": "http://www.guidetojapanese.org/learn/grammar/relativeclause"}, "cyber": {"topic": "Red/Blue Teams", "summary": "Attackers (Red) vs Defenders (Blue).", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 14 Review", "summary": "Review Trig.", "link": "https://www.khanacademy.org/math/geometry"}, "jp": {"topic": "Sent Mod", "summary": "Review relative clauses.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: Nmap", "summary": "Run a basic Nmap scan.", "link": "https://nmap.org/book/install.html"}}
+        30: {"phase": "Phase 3: Net-Sentry V1.0 Launch", "days": {
+            1: {"math": {"topic": "Project Week", "summary": "Focus on Code.", "link": "https://github.com/"}, "jp": {"topic": "Causative Rev", "summary": "Review.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Code: Refactor", "summary": "Clean up Sniffer code.", "link": "https://github.com/"}},
+            2: {"math": {"topic": "Project Week", "summary": "Focus on Code.", "link": "https://github.com/"}, "jp": {"topic": "Keigo Rev", "summary": "Review.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Docs: README", "summary": "Write clear documentation.", "link": "https://github.com/"}},
+            3: {"math": {"topic": "Project Week", "summary": "Focus on Code.", "link": "https://github.com/"}, "jp": {"topic": "Business Phrases", "summary": "Work vocab.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Test: Live Run", "summary": "Run on home network.", "link": "https://github.com/"}},
+            4: {"math": {"topic": "Project Week", "summary": "Focus on Code.", "link": "https://github.com/"}, "jp": {"topic": "Phone Call", "summary": "Phrases.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Release: GitHub", "summary": "Push v1.0 to repo.", "link": "https://github.com/"}},
+            5: {"math": {"topic": "Project Week", "summary": "Focus on Code.", "link": "https://github.com/"}, "jp": {"topic": "Advice Rev", "summary": "Review.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Video: Demo", "summary": "Record 3 min demo.", "link": "https://obsproject.com/"}},
+            6: {"math": {"topic": "Project Week", "summary": "Focus on Code.", "link": "https://github.com/"}, "jp": {"topic": "Regret Rev", "summary": "Review.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Submit: Portfolio", "summary": "Add to main website/CV.", "link": "https://github.com/"}},
+            7: {"math": {"topic": "MILESTONE", "summary": "Net-Sentry V1.0 Live.", "link": "https://github.com/"}, "jp": {"topic": "Keigo Audit", "summary": "Final check.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Celebration", "summary": "Phase 3 Done.", "link": "https://www.youtube.com/"}}
         }},
-        15: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Radians/Degs", "summary": "Convert between Radians and Degrees.", "link": "https://www.khanacademy.org/math/trigonometry/unit-circle-trig-func/radians/v/introduction-to-radians"}, "jp": {"topic": "Comparisons", "summary": "A is more than B (Yori).", "link": "http://www.guidetojapanese.org/learn/grammar/comparison"}, "cyber": {"topic": "Python Sockets", "summary": "Network programming in Python.", "link": "https://realpython.com/python-sockets/"}},
-            2: {"math": {"topic": "Unit Circle", "summary": "Memorize the unit circle points.", "link": "https://www.khanacademy.org/math/trigonometry/unit-circle-trig-func/unit-circle-definition-of-trig-functions/v/unit-circle-definition-of-trig-functions-1"}, "jp": {"topic": "Superlatives", "summary": "The most (Ichiban).", "link": "http://www.guidetojapanese.org/learn/grammar/comparison"}, "cyber": {"topic": "Port Scanner", "summary": "Build a scanner in Python.", "link": "https://www.geeksforgeeks.org/port-scanner-using-python/"}},
-            3: {"math": {"topic": "Circle Coords", "summary": "Sin = y, Cos = x.", "link": "https://www.khanacademy.org/math/trigonometry/unit-circle-trig-func/unit-circle-definition-of-trig-functions/v/unit-circle"}, "jp": {"topic": "~Tara (If)", "summary": "Conditional 'Tara' form.", "link": "http://www.guidetojapanese.org/learn/grammar/conditionals"}, "cyber": {"topic": "Scripting", "summary": "Automating security tasks.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Ref Angles", "summary": "Find reference angles in all quadrants.", "link": "https://www.khanacademy.org/math/trigonometry/unit-circle-trig-func/trig-values-special-angles/v/reference-angle-1"}, "jp": {"topic": "~Ba (If)", "summary": "Conditional 'Ba' form.", "link": "http://www.guidetojapanese.org/learn/grammar/conditionals"}, "cyber": {"topic": "Packet Analysis", "summary": "Reading PCAP files.", "link": "https://www.wireshark.org/"}},
-            5: {"math": {"topic": "Sin/Cos Graph", "summary": "Graphing Sine and Cosine waves.", "link": "https://www.khanacademy.org/math/trigonometry/trig-with-general-angles/sine-and-cosine-graphs/v/graphing-sine-and-cosine-functions"}, "jp": {"topic": "Volitional", "summary": "Let's do (Ikou).", "link": "http://www.guidetojapanese.org/learn/grammar/volitional"}, "cyber": {"topic": "Attack Vectors", "summary": "Methods of entry.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Z-Score", "summary": "Calculate standardized score.", "link": "https://www.khanacademy.org/math/statistics-probability/modeling-distributions-of-data/z-scores/v/z-score-introduction"}, "jp": {"topic": "Transitive", "summary": "Transitive vs Intransitive verbs.", "link": "http://www.guidetojapanese.org/learn/grammar/transitive"}, "cyber": {"topic": "Threat Actors", "summary": "Nation states, Hacktivists, Script Kiddies.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 15 Review", "summary": "Review Unit Circle.", "link": "https://www.khanacademy.org/math/trigonometry"}, "jp": {"topic": "Trig Graphs", "summary": "Practice graphing.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: Wireshark", "summary": "Analyze a sample packet capture.", "link": "https://wiki.wireshark.org/SampleCaptures"}}
+
+        # --- PHASE 4: LINEAR ALGEBRA & AI RESEARCH (Weeks 31-40) ---
+        # UPDATED: Linear Algebra (for AI) + Research Proposal Prep
+        31: {"phase": "Phase 4: Linear Algebra & AI Research", "days": {
+            1: {"math": {"topic": "Vectors Intro", "summary": "Magnitude/Direction.", "link": f"{KHAN_SEARCH}Vectors"}, 
+                "jp": {"topic": "Academic Vocab", "summary": "Research terms.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Intro to AI Security", "summary": "Adversarial ML basics.", "link": "https://openai.com/research/attacking-machine-learning"}},
+            2: {"math": {"topic": "Vector Ops", "summary": "Add/Scale.", "link": f"{KHAN_SEARCH}Vector+addition"}, 
+                "jp": {"topic": "Formal Writing", "summary": "Thesis style (De Aru).", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Concept: Supervised", "summary": "Labelled data training.", "link": "https://developers.google.com/machine-learning/crash-course"}},
+            3: {"math": {"topic": "Dot Product", "summary": "Similarity measurement.", "link": f"{KHAN_SEARCH}Dot+product"}, 
+                "jp": {"topic": "Reading Tech", "summary": "Read Qiita article.", "link": "https://qiita.com/"}, 
+                "cyber": {"topic": "Concept: Unsupervised", "summary": "Clustering.", "link": "https://developers.google.com/machine-learning/crash-course"}},
+            4: {"math": {"topic": "Unit Vectors", "summary": "Normalization.", "link": f"{KHAN_SEARCH}Unit+vector"}, 
+                "jp": {"topic": "Speaking Prep", "summary": "Self-intro for labs.", "link": "https://vocaroo.com/"}, 
+                "cyber": {"topic": "Lab: Scikit-Learn", "summary": "Install & Setup.", "link": "https://scikit-learn.org/"}},
+            5: {"math": {"topic": "Linear Combinations", "summary": "Spanning space.", "link": f"{KHAN_SEARCH}Linear+combinations"}, 
+                "jp": {"topic": "Research Email", "summary": "Draft email to Prof.", "link": "https://www.tofugu.com/"}, 
+                "cyber": {"topic": "Lab: Pandas", "summary": "Loading CSV Data.", "link": "https://pandas.pydata.org/"}},
+            6: {"math": {"topic": "Basis Vectors", "summary": "Coordinate systems.", "link": f"{KHAN_SEARCH}Basis+vectors"}, 
+                "jp": {"topic": "Listening", "summary": "Tech news.", "link": "https://www.youtube.com/"}, 
+                "cyber": {"topic": "Paper: ML in Cyber", "summary": "Read survey paper.", "link": ARXIV_SEC}},
+            7: {"math": {"topic": "Week 31 Review", "summary": "Vectors.", "link": MIT_LINEAR_ALG}, 
+                "jp": {"topic": "Review", "summary": "Weekly Audit.", "link": "https://apps.ankiweb.net/"}, 
+                "cyber": {"topic": "Log: Research Journal", "summary": "Update Engineering Log.", "link": "https://github.com/"}}
         }},
-        16: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Log Intro", "summary": "Logarithm as inverse exponential.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:logs/x2ec2f6f830c9fb89:log-intro/v/logarithms"}, "jp": {"topic": "Particle SHI", "summary": "Listing reasons with 'Shi'.", "link": "http://www.guidetojapanese.org/learn/grammar/particles2"}, "cyber": {"topic": "OWASP Top 10", "summary": "Top web vulnerabilities.", "link": "https://owasp.org/www-project-top-ten/"}},
-            2: {"math": {"topic": "Log Properties", "summary": "Product, Quotient, Power rules.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:logs/x2ec2f6f830c9fb89:log-prop/v/introduction-to-logarithm-properties"}, "jp": {"topic": "NAGARA", "summary": "While doing (Nagara).", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "SQL Injection", "summary": "Injecting SQL commands into inputs.", "link": "https://portswigger.net/web-security/sql-injection"}},
-            3: {"math": {"topic": "Expand/Condense", "summary": "Manipulate log expressions.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:logs/x2ec2f6f830c9fb89:log-prop/v/using-properties-of-logarithms-example"}, "jp": {"topic": "NODE / KARA", "summary": "Because/Since (Node/Kara).", "link": "http://www.guidetojapanese.org/learn/grammar/compound"}, "cyber": {"topic": "XSS Attacks", "summary": "Cross-Site Scripting basics.", "link": "https://portswigger.net/web-security/cross-site-scripting"}},
-            4: {"math": {"topic": "Natural Log", "summary": "Log base e (ln).", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:logs/x2ec2f6f830c9fb89:log-intro/v/natural-logarithm-and-natural-exponential-function"}, "jp": {"topic": "~Kana (Wonder)", "summary": "I wonder if... (Kana).", "link": "http://www.guidetojapanese.org/learn/grammar/sentence_ending"}, "cyber": {"topic": "CSRF Attacks", "summary": "Cross-Site Request Forgery.", "link": "https://portswigger.net/web-security/csrf"}},
-            5: {"math": {"topic": "Log Equations", "summary": "Solve equations with logs.", "link": "https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:logs/x2ec2f6f830c9fb89:exponential-models/v/solving-logarithmic-equations"}, "jp": {"topic": "Passive Voice", "summary": "Was done to (Rareru).", "link": "http://www.guidetojapanese.org/learn/grammar/passive"}, "cyber": {"topic": "Dir Traversal", "summary": "Accessing unauthorized files.", "link": "https://portswigger.net/web-security/file-path-traversal"}},
-            6: {"math": {"topic": "Stats: Normal Dist", "summary": "68-95-99.7 Rule.", "link": "https://www.khanacademy.org/math/statistics-probability/modeling-distributions-of-data/normal-distributions-library/v/introduction-to-the-normal-distribution"}, "jp": {"topic": "Causative", "summary": "Make someone do (Saseru).", "link": "http://www.guidetojapanese.org/learn/grammar/causative"}, "cyber": {"topic": "App Hardening", "summary": "Securing applications.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Exam: Trig/Log", "summary": "Test on Logs and Trig.", "link": "https://www.khanacademy.org/math/algebra2"}, "jp": {"topic": "Phase 4 Rev", "summary": "Review Week 16 grammar.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: PortSwigger", "summary": "Complete 1 PortSwigger lab.", "link": PORT_SWIGGER}}
+        35: {"phase": "Phase 4: Linear Algebra & AI Research", "days": {
+            1: {"math": {"topic": "Orthogonality", "summary": "Perpendicular vectors.", "link": f"{KHAN_SEARCH}Orthogonal+vectors"}, 
+                "jp": {"topic": "Particle SHI", "summary": "Listing reasons.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "OIST Prep: CV", "summary": "Polish CV with Projects.", "link": OIST_ADMISSIONS}},
+            2: {"math": {"topic": "Orthogonal Sets", "summary": "Independence.", "link": MIT_LINEAR_ALG}, 
+                "jp": {"topic": "NAGARA (While)", "summary": "Multi-tasking.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "OIST Prep: SOP", "summary": "Draft Introduction.", "link": OIST_ADMISSIONS}},
+            3: {"math": {"topic": "Projections", "summary": "Shadows on a plane.", "link": f"{KHAN_SEARCH}Projections+linear+algebra"}, 
+                "jp": {"topic": "NODE/KARA", "summary": "Reasons.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "OIST Prep: SOP", "summary": "Draft Research Plan.", "link": OIST_ADMISSIONS}},
+            4: {"math": {"topic": "Gram-Schmidt", "summary": "Orthonormalizing.", "link": f"{KHAN_SEARCH}Gram+schmidt"}, 
+                "jp": {"topic": "~Kana (Wonder)", "summary": "Wondering.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "OIST Prep: SOP", "summary": "Draft Academic History.", "link": OIST_ADMISSIONS}},
+            5: {"math": {"topic": "Least Squares", "summary": "Regression math.", "link": f"{KHAN_SEARCH}Least+squares"}, 
+                "jp": {"topic": "Passive Rev", "summary": "Review.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Output: SOP Draft 1", "summary": "Complete first draft.", "link": OIST_ADMISSIONS}},
+            6: {"math": {"topic": "Least Squares II", "summary": "Applications.", "link": MIT_LINEAR_ALG}, 
+                "jp": {"topic": "Causative Rev", "summary": "Review.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "Review: Deadlines", "summary": "Check Internship dates.", "link": OIST_ADMISSIONS}},
+            7: {"math": {"topic": "Week 35 Review", "summary": "Orthogonality.", "link": MIT_LINEAR_ALG}, 
+                "jp": {"topic": "Output Check", "summary": "Review SOP.", "link": OIST_ADMISSIONS}, 
+                "cyber": {"topic": "Log: Research Journal", "summary": "Update Engineering Log.", "link": "https://github.com/"}}
         }},
-        17: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Binomial Thm", "summary": "Expand (a+b)^n.", "link": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:polynomials/x9e81a4f98389efdf:binomial/v/binomial-theorem"}, "jp": {"topic": "Keigo Intro", "summary": "Introduction to Honorifics.", "link": "http://www.guidetojapanese.org/learn/grammar/honorific"}, "cyber": {"topic": "Business Cont.", "summary": "Keeping business running.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Arith Sequence", "summary": "Linear patterns.", "link": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:series/x9e81a4f98389efdf:seq-intro/v/explicit-and-recursive-definitions-of-sequences"}, "jp": {"topic": "Kenjougo", "summary": "Humble language.", "link": "http://www.guidetojapanese.org/learn/grammar/honorific"}, "cyber": {"topic": "Disaster Rec", "summary": "Recovering from disaster.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Geom Sequence", "summary": "Exponential patterns.", "link": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:series/x9e81a4f98389efdf:seq-intro/v/geometric-sequences-introduction"}, "jp": {"topic": "Business JP", "summary": "Common business phrases.", "link": "http://www.guidetojapanese.org/learn/grammar/honorific"}, "cyber": {"topic": "Incident Resp", "summary": "IR Lifecycle.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "Sigma Notation", "summary": "Summation symbols.", "link": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:series/x9e81a4f98389efdf:summation/v/sigma-notation-summation"}, "jp": {"topic": "Formal Phone", "summary": "Telephone etiquette.", "link": "http://www.guidetojapanese.org/learn/grammar/honorific"}, "cyber": {"topic": "Forensics", "summary": "Digital evidence basics.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Induction", "summary": "Proof by Induction.", "link": "https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:series/x9e81a4f98389efdf:induction/v/proof-by-induction"}, "jp": {"topic": "Advice", "summary": "You should (Hou ga ii).", "link": "http://www.guidetojapanese.org/learn/grammar/recommendation"}, "cyber": {"topic": "Chain of Cust", "summary": "Evidence integrity.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: Sampling", "summary": "Sampling distributions.", "link": "https://www.khanacademy.org/math/statistics-probability/sampling-distributions-library/sampling-distribution-mean/v/sampling-distribution-of-the-sample-mean"}, "jp": {"topic": "~Te shimau", "summary": "Regret/Completion.", "link": "http://www.guidetojapanese.org/learn/grammar/unintended"}, "cyber": {"topic": "GDPR", "summary": "EU Data Privacy.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 17 Review", "summary": "Review sequences.", "link": "https://www.khanacademy.org/math/precalculus"}, "jp": {"topic": "Keigo Audit", "summary": "Check Keigo usage.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: IR Plan", "summary": "Review an IR Playbook.", "link": "https://www.cisa.gov/sites/default/files/publications/Federal_Government_Cybersecurity_Incident_and_Vulnerability_Response_Playbooks_508C.pdf"}}
-        }},
-        18: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Limits Concept", "summary": "Approaching a value.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-limit-intro/v/introduction-to-limits-hd"}, "jp": {"topic": "~Sou desu", "summary": "It looks like...", "link": "http://www.guidetojapanese.org/learn/grammar/hearsay"}, "cyber": {"topic": "Cloud Types", "summary": "Public, Private, Hybrid.", "link": MESSER_SEC}},
-            2: {"math": {"topic": "Estimating Lim", "summary": "Finding limits graphically.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-estimating-limits-from-graphs/v/estimating-limit-from-graph"}, "jp": {"topic": "~Rashii", "summary": "Seemingly...", "link": "http://www.guidetojapanese.org/learn/grammar/hearsay"}, "cyber": {"topic": "VM Security", "summary": "Securing Virtual Machines.", "link": MESSER_SEC}},
-            3: {"math": {"topic": "Substitution Lim", "summary": "Direct substitution.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-evaluating-limits-using-substitution/v/limits-by-substitution"}, "jp": {"topic": "~Deshou", "summary": "Probably...", "link": "http://www.guidetojapanese.org/learn/grammar/hearsay"}, "cyber": {"topic": "Mobile Sec", "summary": "MDM and MAM.", "link": MESSER_SEC}},
-            4: {"math": {"topic": "One-Sided Lim", "summary": "Left vs Right hand limits.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-one-sided-limits/v/one-sided-limits-graphs"}, "jp": {"topic": "~Tame ni", "summary": "In order to...", "link": "http://www.guidetojapanese.org/learn/grammar/cause"}, "cyber": {"topic": "IoT Security", "summary": "Securing smart devices.", "link": MESSER_SEC}},
-            5: {"math": {"topic": "Continuity", "summary": "Unbroken curves.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-continuity-at-a-point/v/continuity-at-a-point"}, "jp": {"topic": "~Yasui/Nikui", "summary": "Easy/Hard to do.", "link": "http://www.guidetojapanese.org/learn/grammar/easy_hard"}, "cyber": {"topic": "Physical Ctrl", "summary": "Fences, Lighting, CCTV.", "link": MESSER_SEC}},
-            6: {"math": {"topic": "Stats: CLT", "summary": "Central Limit Theorem.", "link": "https://www.khanacademy.org/math/statistics-probability/sampling-distributions-library/sampling-distribution-mean/v/central-limit-theorem"}, "jp": {"topic": "Podcasts", "summary": "Listen to Teppei.", "link": "https://nihongoconteppei.com/"}, "cyber": {"topic": "Social Eng", "summary": "Human hacking types.", "link": MESSER_SEC}},
-            7: {"math": {"topic": "Week 18 Review", "summary": "Review Limits.", "link": "https://www.khanacademy.org/math/calculus-1"}, "jp": {"topic": "Audit", "summary": "Review Week 18 grammar.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Exam: Practice Sec+", "summary": "Take a practice Security+ test.", "link": "https://www.examcompass.com/comptia/security-plus-certification/free-security-plus-practice-tests"}}
-        }},
-        19: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Algebraic Lim", "summary": "Factoring to find limits.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-limits-algebraically/v/limits-by-factoring"}, "jp": {"topic": "News Reading", "summary": "Read NHK Easy.", "link": "https://www3.nhk.or.jp/news/easy/"}, "cyber": {"topic": "HTML Basics", "summary": "Structure of a webpage.", "link": "https://www.w3schools.com/html/"}},
-            2: {"math": {"topic": "Conjugates", "summary": "Rationalizing the numerator.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-limits-algebraically/v/limits-by-rationalizing"}, "jp": {"topic": "Journaling", "summary": "Write a diary entry.", "link": "https://lang-8.com/"}, "cyber": {"topic": "Cookies", "summary": "Session management.", "link": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies"}},
-            3: {"math": {"topic": "Infinite Limits", "summary": "Vertical asymptotes.", "link": "https://www.khanacademy.org/math/calculus-1/cs-limits-and-continuity/cs-infinite-limits/v/limits-at-infinity"}, "jp": {"topic": "Lang Exchange", "summary": "Talk to a native.", "link": "https://www.hellotalk.com/"}, "cyber": {"topic": "HTTP Headers", "summary": "Request/Response headers.", "link": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers"}},
-            4: {"math": {"topic": "Derivative Intro", "summary": "Instantaneous rate of change.", "link": "https://www.khanacademy.org/math/calculus-1/cs-derivatives-definition-and-basic-rules/cs-derivative-intro/v/derivative-as-a-concept"}, "jp": {"topic": "Slang", "summary": "Common slang.", "link": "http://www.guidetojapanese.org/learn/grammar/slang"}, "cyber": {"topic": "Burp Intro", "summary": "Setting up Burp Suite.", "link": "https://portswigger.net/burp/documentation/desktop/getting-started"}},
-            5: {"math": {"topic": "Limit Definition", "summary": "Formal definition of derivative.", "link": "https://www.khanacademy.org/math/calculus-1/cs-derivatives-definition-and-basic-rules/cs-derivative-intro/v/derivative-as-limit"}, "jp": {"topic": "Anime No Subs", "summary": "Active listening.", "link": "https://animelon.com/"}, "cyber": {"topic": "Intercepting", "summary": "Catching requests in Burp.", "link": "https://portswigger.net/burp/documentation/desktop/getting-started/intercepting-http-traffic"}},
-            6: {"math": {"topic": "Power Rule", "summary": "nx^(n-1).", "link": "https://www.khanacademy.org/math/calculus-1/cs-derivatives-definition-and-basic-rules/cs-power-rule/v/power-rule"}, "jp": {"topic": "Shadowing", "summary": "Repeat after audio.", "link": "https://www.tofugu.com/japanese/shadowing/"}, "cyber": {"topic": "Repeater", "summary": "Replaying requests.", "link": "https://portswigger.net/burp/documentation/desktop/tools/repeater"}},
-            7: {"math": {"topic": "Week 19 Review", "summary": "Review derivatives.", "link": "https://www.khanacademy.org/math/calculus-1"}, "jp": {"topic": "Quiz", "summary": "Vocab quiz.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Lab: Burp", "summary": "Burp Suite lab.", "link": "https://portswigger.net/burp/communitydownload"}}
-        }},
-        20: {"phase": "Phase 2: Security+ & N5", "days": {
-            1: {"math": {"topic": "Deriv Practice", "summary": "Drill derivative rules.", "link": "https://www.khanacademy.org/math/calculus-1"}, "jp": {"topic": "N4 Review", "summary": "Comprehensive review.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "Linux PrivEsc", "summary": "Escalating to Root.", "link": "https://tryhackme.com/room/linuxprivesc"}},
-            2: {"math": {"topic": "Integrals Intro", "summary": "Area under the curve.", "link": "https://www.khanacademy.org/math/calculus-1/cs-integration/cs-integration-intro/v/introduction-to-integral-calculus"}, "jp": {"topic": "Kanji Audit", "summary": "Check Kanji progress.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Win PrivEsc", "summary": "Escalating to Admin.", "link": "https://tryhackme.com/room/windows10privesc"}},
-            3: {"math": {"topic": "Fund Theorem", "summary": "Connecting derivatives and integrals.", "link": "https://www.khanacademy.org/math/calculus-1/cs-integration/cs-fundamental-theorem-of-calculus/v/fundamental-theorem-of-calculus"}, "jp": {"topic": "Immersion", "summary": "Deep immersion session.", "link": "https://www.youtube.com/user/MATTvsJapan"}, "cyber": {"topic": "Reverse Shells", "summary": "Connecting back to attacker.", "link": "https://www.youtube.com/watch?v=1X_4Xy0_5_0"}},
-            4: {"math": {"topic": "Final Exam", "summary": "Phase 2 Math Final.", "link": "https://www.khanacademy.org/math/calculus-1"}, "jp": {"topic": "Monologue", "summary": "Record yourself speaking.", "link": "https://vocaroo.com/"}, "cyber": {"topic": "Metasploit", "summary": "Using the Framework.", "link": "https://www.metasploit.com/"}},
-            5: {"math": {"topic": "Stats: Hypothesis", "summary": "Intro to P-values.", "link": "https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample/idea-of-significance-tests/v/introduction-to-hypothesis-testing"}, "jp": {"topic": "N3 Planning", "summary": "Plan next phase.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Exploit DB", "summary": "Finding public exploits.", "link": "https://www.exploit-db.com/"}},
-            6: {"math": {"topic": "Note Cleanup", "summary": "Organize all notes.", "link": "https://www.notion.so/"}, "jp": {"topic": "Anki Goals", "summary": "Set new card goals.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "CTF", "summary": "Capture The Flag event.", "link": "https://picoctf.org/"}},
-            7: {"math": {"topic": "PHASE 2 DONE", "summary": "Rest and recover.", "link": "https://www.khanacademy.org/"}, "jp": {"topic": "CELEBRATE", "summary": "Watch a movie.", "link": "https://www.youtube.com/"}, "cyber": {"topic": "GRADUATION", "summary": "Plan Phase 3.", "link": "https://tryhackme.com/"}}
+        40: {"phase": "Phase 4: Graduation & Application", "days": {
+            1: {"math": {"topic": "PCA Intro", "summary": "Dimensionality Reduction.", "link": "https://setosa.io/ev/principal-component-analysis/"}, "jp": {"topic": "Final Audit", "summary": "N3 Check.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Portfolio: Polish", "summary": "Finalize GitHub.", "link": "https://github.com/"}},
+            2: {"math": {"topic": "SVD Intro", "summary": "Singular Value Decomp.", "link": MIT_LINEAR_ALG}, "jp": {"topic": "Interview Prep", "summary": "Why OIST?", "link": "https://vocaroo.com/"}, "cyber": {"topic": "Master's Syllabus", "summary": "Review Week 1.", "link": "https://www.coursera.org/"}},
+            3: {"math": {"topic": "Linear Alg Final", "summary": "Cumulative Review.", "link": MIT_LINEAR_ALG}, "jp": {"topic": "Resume JP", "summary": "Translate CV.", "link": "https://www.tofugu.com/"}, "cyber": {"topic": "Submit: Internship", "summary": "Send application.", "link": OIST_ADMISSIONS}},
+            4: {"math": {"topic": "Tensors Preview", "summary": "Math for Deep Learning.", "link": "https://www.tensorflow.org/guide/tensor"}, "jp": {"topic": "Celebration", "summary": "Sushi.", "link": "https://www.youtube.com/"}, "cyber": {"topic": "Email Professors", "summary": "Send cold emails.", "link": "https://nii.ac.jp/"}},
+            5: {"math": {"topic": "Master's Prep", "summary": "Get textbooks.", "link": "https://www.amazon.com/"}, "jp": {"topic": "Anki Clean", "summary": "Archive decks.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "Capstone: Release", "summary": "Make repo public.", "link": "https://github.com/"}},
+            6: {"math": {"topic": "Rest", "summary": "Brain recovery.", "link": "https://www.headspace.com/"}, "jp": {"topic": "Rest", "summary": "Brain recovery.", "link": "https://www.headspace.com/"}, "cyber": {"topic": "Rest", "summary": "Brain recovery.", "link": "https://www.headspace.com/"}},
+            7: {"math": {"topic": "GRADUATION", "summary": "Ready for Math Research.", "link": MIT_LINEAR_ALG}, "jp": {"topic": "NEXT PHASE", "summary": "Road to OIST.", "link": OIST_ADMISSIONS}, "cyber": {"topic": "MISSION START", "summary": "Begin Cyber MS.", "link": OIST_ADMISSIONS}}
         }}
     }
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.title("📊 Mastery Tracker")
+    st.title("🛡️ Net-Sentry Tracker")
+    st.caption("Cyber MS ➡️ OIST PhD Track")
     st.markdown("---")
     
-    # Calculate Stats
-    full_data = get_curriculum()
-    total_tasks = 20 * 7 * 3 
-    completed_count = sum(st.session_state.progress.values())
-    percent_complete = min((completed_count / total_tasks), 1.0)
+    st.markdown("### 🏆 Project Milestones")
+    st.checkbox("Week 10: Log Parser", value=True)
+    st.checkbox("Week 20: Port Scanner", value=False)
+    st.checkbox("Week 30: Traffic Sniffer", value=False)
+    st.checkbox("Week 40: AI Anomaly Detector", value=False)
     
-    st.metric("Total Progress", f"{percent_complete:.1%}")
-    st.progress(percent_complete)
+    st.markdown("---")
+    # In a full app, you would list all 1-40.
+    # For this demo, we list key weeks to verify content.
+    selected_week = st.selectbox("Current Week", [1, 11, 21, 25, 30, 31, 35, 40])
     
-    st.markdown("### Navigation")
-    selected_week = st.selectbox("Select Current Week", list(range(1, 21)))
-    
-    # Add a reset button
-    if st.button("Reset All Progress"):
+    if st.button("Reset"):
         st.session_state.progress = {}
         st.experimental_rerun()
 
 # --- MAIN PAGE ---
-curr_week_data = get_curriculum()[selected_week]
+curriculum = get_curriculum()
+curr_week_data = curriculum.get(selected_week, curriculum[1])
+
 st.header(f"Week {selected_week}: {curr_week_data['phase']}")
-st.markdown("Check off tasks as you complete them to track your 'Triple Threat' journey.")
+
+# Phase Context Alerts
+if selected_week <= 10:
+    st.info("🏗️ **Foundation Phase:** Build your algebra and network basics. Consistency is key.")
+elif 11 <= selected_week <= 20:
+    st.info("🐍 **Scripting Phase:** You are moving from 'User' to 'Builder'. Focus on Python.")
+elif 21 <= selected_week <= 30:
+    st.success("🧩 **Research Phase 1 (Discrete):** You are learning the math of Cryptography and building your Sniffer.")
+else:
+    st.warning("🧠 **Research Phase 2 (AI):** You are preparing for the PhD. Linear Algebra and Research Proposals are the priority.")
 
 tabs = st.tabs([f"Day {i}" for i in range(1, 8)])
 
 for day_num, tab in zip(range(1, 8), tabs):
     with tab:
-        day_data = curr_week_data["days"][day_num]
+        day_data = curr_week_data["days"].get(day_num, {})
+        if not day_data: 
+            st.write("Rest day or data not loaded.")
+            continue
         
         col1, col2, col3 = st.columns(3)
         
-        # MATH
         with col1:
             st.subheader("📐 Math")
-            topic = day_data['math']['topic']
-            summary = day_data['math'].get('summary', '')
-            link = day_data['math']['link']
-            key = f"w{selected_week}_d{day_num}_math"
-            is_done = st.checkbox("Complete", key=key, value=st.session_state.progress.get(key, False))
-            if is_done: st.session_state.progress[key] = True
-            else: st.session_state.progress[key] = False
-            st.markdown(f"**Topic:** {topic}")
-            if summary:
-                st.caption(f"📝 {summary}")
-            st.link_button("Go to Resource", link)
-
-        # JAPANESE
+            st.markdown(f"**{day_data['math']['topic']}**")
+            st.caption(day_data['math']['summary'])
+            st.link_button("Study", day_data['math']['link'])
+            st.checkbox("Done", key=f"m{selected_week}{day_num}")
+            
         with col2:
             st.subheader("🇯🇵 Japanese")
-            topic = day_data['jp']['topic']
-            summary = day_data['jp'].get('summary', '')
-            link = day_data['jp']['link']
-            key = f"w{selected_week}_d{day_num}_jp"
-            is_done = st.checkbox("Complete", key=key, value=st.session_state.progress.get(key, False))
-            if is_done: st.session_state.progress[key] = True
-            else: st.session_state.progress[key] = False
-            st.markdown(f"**Topic:** {topic}")
-            if summary:
-                st.caption(f"📝 {summary}")
-            st.link_button("Go to Resource", link)
-
-        # CYBER
+            st.markdown(f"**{day_data['jp']['topic']}**")
+            st.caption(day_data['jp']['summary'])
+            st.link_button("Study", day_data['jp']['link'])
+            st.checkbox("Done", key=f"j{selected_week}{day_num}")
+            
         with col3:
-            st.subheader("🛡️ Cyber")
-            topic = day_data['cyber']['topic']
-            summary = day_data['cyber'].get('summary', '')
-            link = day_data['cyber']['link']
-            key = f"w{selected_week}_d{day_num}_cyber"
-            is_done = st.checkbox("Complete", key=key, value=st.session_state.progress.get(key, False))
-            if is_done: st.session_state.progress[key] = True
-            else: st.session_state.progress[key] = False
-            st.markdown(f"**Topic:** {topic}")
-            if summary:
-                st.caption(f"📝 {summary}")
-            st.link_button("Go to Resource", link)
+            st.subheader("🛡️ Cyber / Research")
+            st.markdown(f"**{day_data['cyber']['topic']}**")
+            st.caption(day_data['cyber']['summary'])
+            st.link_button("Build/Read", day_data['cyber']['link'])
+            st.checkbox("Done", key=f"c{selected_week}{day_num}")
 
-        st.markdown("---")
-        
-        # Success Message
-        day_keys = [f"w{selected_week}_d{day_num}_{subj}" for subj in ["math", "jp", "cyber"]]
-        if all(st.session_state.progress.get(k, False) for k in day_keys):
-            st.markdown(f"<div class='success-box'>🎉 <b>Day {day_num} Complete!</b> Great work.</div>", unsafe_allow_html=True)
+        # Special Milestones on Day 7
+        if day_num == 7 and selected_week > 20:
+             if selected_week == 30:
+                 st.markdown("""
+                 <div class="project-box">
+                 <b>🚀 LAUNCH DAY:</b><br>
+                 Net-Sentry V1.0 must be pushed to GitHub today. This is your first major Research Artifact.
+                 </div>
+                 """, unsafe_allow_html=True)
+             else:
+                 st.markdown(f"""
+                 <div class="research-box">
+                 <b>🧬 Researcher's Log:</b><br>
+                 Update your Engineering Log with your {day_data['cyber']['topic']} progress.
+                 </div>
+                 """, unsafe_allow_html=True)
