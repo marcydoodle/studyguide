@@ -1,146 +1,188 @@
-# --- RESOURCE CONSTANTS (EASY TO UPDATE) ---
-# Math
-KHAN = "https://www.khanacademy.org/search?page_search_query="
-TREFOR_DISCRETE = "https://www.youtube.com/playlist?list=PLDDGPdw7e6Ag1EIznZ-m-qXu4XX3A0cIz" # Best Discrete Math Playlist
-MIT_LIN_ALG = "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/video_lectures/" # Gilbert Strang (Gold Standard)
-# Cyber & Python
-PYTHON_DOCS = "https://docs.python.org/3/library/"
-SCAPY_DOCS = "https://scapy.readthedocs.io/en/latest/usage.html"
-SKLEARN = "https://scikit-learn.org/stable/user_guide.html"
-ARXIV = "https://arxiv.org/list/cs.CR/recent" # New Research
-# Japanese
-TAE_KIM = "http://www.guidetojapanese.org/learn/grammar/"
-JLPT_SENSEI = "https://jlptsensei.com/"
-TOFUGU = "https://www.tofugu.com/japanese/"
-# OIST
-OIST_URL = "https://admissions.oist.jp/"
+import streamlit as st
+import pandas as pd
+from bs4 import BeautifulSoup
+import io
 
-def get_curriculum():
-    return {
-        # --- PHASE 1 & 2 (Foundations) ---
-        # (Keeping Week 1 & 11 as placeholders for the early stuff)
-        1: {"phase": "Phase 1: Foundations", "days": {
-            1: {"math": {"topic": "Order of Operations", "summary": "PEMDAS rules.", "link": f"{KHAN}Order+of+operations"}, "jp": {"topic": "Hiragana A-O", "summary": "First 5 vowels.", "link": f"{TOFUGU}learn-hiragana/"}, "cyber": {"topic": "Network: OSI Model", "summary": "Layers 1-7.", "link": "https://www.professormesser.com/"}},
-            7: {"math": {"topic": "Week 1 Review", "summary": "Algebra basics.", "link": f"{KHAN}Algebra"}, "jp": {"topic": "Anki Setup", "summary": "Daily reps.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "Lab: VirtualBox", "summary": "Setup Victim/Attacker VMs.", "link": "https://www.virtualbox.org/"}}
-        }},
-        11: {"phase": "Phase 2: Sec+ & Scripting", "days": {
-            1: {"math": {"topic": "Functions Intro", "summary": "Inputs/Outputs.", "link": f"{KHAN}Functions"}, "jp": {"topic": "Te-Form (Ru)", "summary": "Conjugation.", "link": TAE_KIM}, "cyber": {"topic": "Python: Variables", "summary": "Data types.", "link": "https://www.w3schools.com/python/"}},
-            7: {"math": {"topic": "Review", "summary": "Functions.", "link": f"{KHAN}Algebra2"}, "jp": {"topic": "Te-Form Drill", "summary": "Drill.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "Milestone 1: Log Parser", "summary": "Read CSV logs with Python.", "link": f"{PYTHON_DOCS}csv.html"}}
-        }},
+# --- 1. EMBEDDED SCHEDULE DATA (No Upload Needed) ---
+# I have embedded the body of your schedule here. 
+# This allows the app to run standalone.
+RAW_HTML_DATA = """
+<body>
+<p>Phase 1: Foundations & Networking</p>
+<table>
+  <tr><td>Week</td><td>Day</td><td>Math</td><td>Japanese</td><td>Cybersecurity</td><td>Links</td></tr>
+  <tr><td>1</td><td>1</td><td>Order of Operations</td><td>Hiragana A-O</td><td>Intro to Networking</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:foundation-algebra/x2f8bb11595b61c86:intro-variables/v/order-of-operations">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=9WkCgEyxk70">Cyber</a></td></tr>
+  <tr><td>1</td><td>2</td><td>Combining Like Terms</td><td>Hiragana KA-KO</td><td>The OSI Model</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:foundation-algebra/x2f8bb11595b61c86:combining-like-terms/v/combining-like-terms">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=Ilk71j9kSgs">Cyber</a></td></tr>
+  <tr><td>1</td><td>3</td><td>1-Step Equations</td><td>Hiragana SA-SO</td><td>TCP/IP Model</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:solve-equations-inequalities/x2f8bb11595b61c86:linear-equations-variables-both-sides/v/why-we-do-the-same-thing-to-both-sides-of-equation">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.freecodecamp.org/news/osi-model-networking-layers/">Cyber</a></td></tr>
+  <tr><td>1</td><td>4</td><td>2-Step Equations</td><td>Hiragana TA-TO</td><td>Binary & Hex</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:solve-equations-inequalities/x2f8bb11595b61c86:linear-equations-variables-both-sides/v/two-step-equations">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=LpuPe81bc2w">Cyber</a></td></tr>
+  <tr><td>1</td><td>5</td><td>Multi-Step Equations</td><td>Hiragana NA-NO</td><td>IP Addressing (IPv4)</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:solve-equations-inequalities/x2f8bb11595b61c86:linear-equations-variables-both-sides/v/multi-step-equations-1">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=vcAr9OSHJYA">Cyber</a></td></tr>
+  <tr><td>1</td><td>6</td><td>Mean, Median, Mode</td><td>Writing Practice</td><td>Classful Subnetting</td><td><a href="https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/mean-median-basics/v/mean-median-and-mode">Stats</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=ecC3qvIz9fQ">Cyber</a></td></tr>
+  <tr><td>1</td><td>7</td><td>Week 1 Review</td><td>Anki Setup</td><td>Lab: Install VirtualBox</td><td><a href="https://apps.ankiweb.net/">Anki</a> / <a href="https://www.virtualbox.org/wiki/Downloads">Cyber Lab</a></td></tr>
+  <tr><td>2</td><td>8</td><td>Slope Formula</td><td>Hiragana HA-HO</td><td>IPv6 Basics</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:slope/v/slope-of-a-line">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=NHqd9319Ff0">Cyber</a></td></tr>
+  <tr><td>2</td><td>9</td><td>Slope-Intercept Form</td><td>Hiragana MA-MO</td><td>DNS (Domain Name Sys)</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:slope-intercept-form/v/slope-intercept-form">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=27r4B6kcSC4">Cyber</a></td></tr>
+  <tr><td>2</td><td>10</td><td>Graphing Lines</td><td>Hiragana YA-YO</td><td>DHCP (Dynamic Host)</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:slope-intercept-form/v/graphing-lines-in-slope-intercept-form">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=S43jtK9U5I8">Cyber</a></td></tr>
+  <tr><td>2</td><td>11</td><td>Point-Slope Form</td><td>Hiragana RA-RO</td><td>Routers & Switches</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:point-slope-form/v/point-slope-and-standard-form">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=1z0ULvg_pW8">Cyber</a></td></tr>
+  <tr><td>2</td><td>12</td><td>Standard Form</td><td>Hiragana WA-N</td><td>VLANs Basics</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:linear-equations-graphs/x2f8bb11595b61c86:standard-form/v/standard-form-linear-equations">Math</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=Mofp_3D8vX8">Cyber</a></td></tr>
+  <tr><td>2</td><td>13</td><td>Range & IQR</td><td>Dakuten (ga, za)</td><td>Port Numbers 1-1024</td><td><a href="https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/interquartile-range-iqr/v/range-variance-and-standard-deviation-as-measures-of-dispersion">Stats</a> / <a href="https://www.tofugu.com/japanese/learn-hiragana/">JP</a> / <a href="https://www.youtube.com/watch?v=r_z8F54Z27g">Cyber</a></td></tr>
+  <tr><td>2</td><td>14</td><td>Week 2 Review</td><td>Hiragana Test</td><td>Flashcards: Ports</td><td><a href="https://kana-quiz.tofugu.com/">JP Test</a> / <a href="https://quizlet.com/539304724/common-ports-port-numbers-flash-cards/">Cyber Quiz</a></td></tr>
+  <tr><td>3</td><td>15</td><td>Systems of Eq Intro</td><td>Katakana A-NO</td><td>TCP vs UDP</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:introduction-to-systems-of-equations/v/systems-of-equations">Math</a> / <a href="https://www.tofugu.com/japanese/learn-katakana/">JP</a> / <a href="https://www.youtube.com/watch?v=Vdc8TCamQMw">Cyber</a></td></tr>
+  <tr><td>3</td><td>16</td><td>Substitution Method</td><td>Katakana HA-HO</td><td>Wireless Standards</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:solving-systems-substitution/v/solving-systems-by-substitution-1">Math</a> / <a href="https://www.tofugu.com/japanese/learn-katakana/">JP</a> / <a href="https://www.youtube.com/watch?v=680o2u1sFjI">Cyber</a></td></tr>
+  <tr><td>3</td><td>17</td><td>Elimination Method</td><td>Katakana MA-YO</td><td>2.4GHz vs 5GHz</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:solving-systems-elimination/v/solving-systems-by-elimination">Math</a> / <a href="https://www.tofugu.com/japanese/learn-katakana/">JP</a> / <a href="https://www.youtube.com/watch?v=2b12R8Vn1YI">Cyber</a></td></tr>
+  <tr><td>3</td><td>18</td><td>Systems Word Probs</td><td>Katakana RA-N</td><td>Network Topologies</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:systems-of-equations-word-problems/v/systems-of-equations-word-problems">Math</a> / <a href="https://www.tofugu.com/japanese/learn-katakana/">JP</a> / <a href="https://www.youtube.com/watch?v=Zb7W19o335Y">Cyber</a></td></tr>
+  <tr><td>3</td><td>19</td><td>Systems Review</td><td>Long Vowels</td><td>Cable Types</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations">Math</a> / <a href="https://www.tofugu.com/japanese/learn-katakana/">JP</a> / <a href="https://www.youtube.com/watch?v=N4e74B7Y_8c">Cyber</a></td></tr>
+  <tr><td>3</td><td>20</td><td>Box & Whisker Plots</td><td>Loanwords</td><td>Command Line Basics</td><td><a href="https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/box-whisker-plots/v/box-and-whisker-plot">Stats</a> / <a href="https://www.tofugu.com/japanese/learn-katakana/">JP</a> / <a href="https://www.youtube.com/watch?v=p4JgXqyH8vU">Cyber</a></td></tr>
+  <tr><td>3</td><td>21</td><td>Week 3 Review</td><td>Core 2k Deck</td><td>Lab: Ping Google</td><td><a href="https://ankiweb.net/shared/info/2141233552">JP Anki</a> / <a href="https://www.freecodecamp.org/news/how-to-use-the-ping-command/">Cyber Lab</a></td></tr>
+  <tr><td>4</td><td>22</td><td>Inequalities</td><td>Desu / Da</td><td>Cloud Concepts</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:inequalities-intro/v/inequalities">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/stateofbeing">JP</a> / <a href="https://www.youtube.com/watch?v=1KPrb82e9bw">Cyber</a></td></tr>
+  <tr><td>4</td><td>23</td><td>Solving Inequalities</td><td>Negatives (Janai)</td><td>Virtualization</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:solving-inequalities/v/solving-inequalities">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/stateofbeing">JP</a> / <a href="https://www.youtube.com/watch?v=G86V3e8K5qA">Cyber</a></td></tr>
+  <tr><td>4</td><td>24</td><td>Graphing Inequalities</td><td>Past Tense (Datta)</td><td>Network Troubleshooting</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:graphing-two-variable-inequalities/v/graphing-inequalities">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/stateofbeing">JP</a> / <a href="https://www.youtube.com/watch?v=lUp4SSsVdJY">Cyber</a></td></tr>
+  <tr><td>4</td><td>25</td><td>Systems of Ineq</td><td>Past Neg (Janakatta)</td><td>SOHO Routers</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:systems-two-variable-inequalities/v/graphing-systems-of-inequalities-2">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/stateofbeing">JP</a> / <a href="https://www.youtube.com/watch?v=tT8O9f4u6g4">Cyber</a></td></tr>
+  <tr><td>4</td><td>26</td><td>Modeling with Ineq</td><td>Question Particle</td><td>Security Concepts</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:inequalities-systems-graphs/x2f8bb11595b61c86:modeling-with-linear-inequalities/v/modeling-with-linear-inequalities">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/stateofbeing">JP</a> / <a href="https://www.youtube.com/watch?v=r2dC2iKte68">Cyber</a></td></tr>
+  <tr><td>4</td><td>27</td><td>Standard Deviation</td><td>Particles WA/GA</td><td>Malware Types</td><td><a href="https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/variance-standard-deviation-population/v/variance-of-a-population">Stats</a> / <a href="http://www.guidetojapanese.org/learn/grammar/particlesintro">JP</a> / <a href="https://www.youtube.com/watch?v=n8C8vJ7F5gM">Cyber</a></td></tr>
+  <tr><td>4</td><td>28</td><td>Phase 1 Math Exam</td><td>Grammar Audit</td><td>Exam: Practice Net+</td><td><a href="https://www.khanacademy.org/math/algebra">Math Exam</a> / <a href="https://kana-quiz.tofugu.com/">JP Exam</a> / <a href="https://www.examcompass.com/comptia/network-plus-certification/free-network-plus-practice-tests">Cyber Exam</a></td></tr>
+  <tr><td>5</td><td>29</td><td>Function Mapping</td><td>Particle MO</td><td>Linux: Intro & Kernel</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:evaluating-functions/v/what-is-a-function">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/particlesintro">JP</a> / <a href="https://linuxjourney.com/lesson/kernel-overview">Cyber</a></td></tr>
+  <tr><td>5</td><td>30</td><td>Domain & Range</td><td>Particle NO</td><td>Linux: The Shell</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:domain-range/v/domain-and-range-from-graphs">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/particlesintro">JP</a> / <a href="https://linuxjourney.com/lesson/the-shell">Cyber</a></td></tr>
+  <tr><td>5</td><td>31</td><td>Function Notation</td><td>Particle O</td><td>Linux: ls, cd, pwd</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:evaluating-functions/v/function-notation">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/particlesintro">JP</a> / <a href="https://linuxjourney.com/lesson/navigate-files">Cyber</a></td></tr>
+  <tr><td>5</td><td>32</td><td>Vert. Line Test</td><td>Particle NI/E</td><td>Linux: touch, mkdir</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:vertical-line-test/v/vertical-line-test">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/particlesintro">JP</a> / <a href="https://linuxjourney.com/lesson/creating-files">Cyber</a></td></tr>
+  <tr><td>5</td><td>33</td><td>Linear vs Nonlinear</td><td>Particle DE</td><td>Linux: cp, mv, rm</td><td><a href="https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:recognizing-functions-2/v/linear-nonlinear-functions">Math</a> / <a href="http://www.guidetojapanese.org/learn/grammar/particlesintro">JP</a> / <a href="https://linuxjourney.com/lesson/copy-move-files">Cyber</a></td></tr>
+  <tr><td>5</td><td>34</td><td>Histograms</td><td>All Particles</td><td>Lab: Ubuntu VM Setup</td><td><a href="https://www.khanacademy.org/math/statistics-probability/displaying-describing-data/quantitative-data-graphs/v/histograms-intro">Stats</a> / <a href="http://www.guidetojapanese.org/learn/grammar/particlesintro">JP</a> / <a href="https://ubuntu.com/tutorials/install-ubuntu-desktop-on-virtualbox#1-overview">Cyber</a></td></tr>
+  <tr><td>5</td><td>35</td><td>Week 5 Review</td><td>Anki Review</td><td>Command Line Challenge</td><td><a href="https://apps.ankiweb.net/">JP Anki</a> / <a href="https://overthewire.org/wargames/bandit/bandit0.html">Cyber</a></td></tr>
+</table>
+</body>
+"""
 
-        # --- PHASE 3: DISCRETE MATH & NET-SENTRY (Weeks 21-30) ---
-        # FOCUS: Math of Logic/Networks + Building Traffic Sniffer
-        21: {"phase": "Phase 3: Discrete Math & Net-Sentry", "days": {
-            1: {"math": {"topic": "Logic: Truth Tables", "summary": "AND, OR, XOR basics.", "link": TREFOR_DISCRETE}, 
-                "jp": {"topic": "Passive Voice", "summary": "Rareru form.", "link": f"{TAE_KIM}passive"}, 
-                "cyber": {"topic": "Raw Sockets", "summary": "Python socket library.", "link": "https://realpython.com/python-sockets/"}},
-            2: {"math": {"topic": "Logic: Implications", "summary": "If P then Q.", "link": TREFOR_DISCRETE}, 
-                "jp": {"topic": "Passive Sentences", "summary": "Practice.", "link": f"{TAE_KIM}passive"}, 
-                "cyber": {"topic": "Python: Try/Except", "summary": "Error Handling.", "link": "https://www.w3schools.com/python/python_try_except.asp"}},
-            3: {"math": {"topic": "Set Theory", "summary": "Unions, Intersections.", "link": TREFOR_DISCRETE}, 
-                "jp": {"topic": "Causative Voice", "summary": "Make/Let.", "link": f"{TAE_KIM}causative"}, 
-                "cyber": {"topic": "Tool: Scapy Basics", "summary": "Packet manipulation.", "link": SCAPY_DOCS}},
-            4: {"math": {"topic": "Venn Diagrams", "summary": "Visualizing sets.", "link": f"{KHAN}Venn+diagrams"}, 
-                "jp": {"topic": "Causative Practice", "summary": "Drill.", "link": f"{TAE_KIM}causative"}, 
-                "cyber": {"topic": "Lab: Local Sniffer", "summary": "Sniff localhost.", "link": "https://thepacketgeek.com/scapy/sniffing-custom-packets/"}},
-            5: {"math": {"topic": "Boolean Algebra", "summary": "Simplifying circuits.", "link": f"{KHAN}Boolean+algebra"}, 
-                "jp": {"topic": "Keigo: Intro", "summary": "Polite speech.", "link": f"{TAE_KIM}honorific"}, 
-                "cyber": {"topic": "Lab: Filtering", "summary": "Filter TCP/80.", "link": SCAPY_DOCS}},
-            6: {"math": {"topic": "Logic Gates", "summary": "Physical circuits.", "link": f"{KHAN}Logic+gates"}, 
-                "jp": {"topic": "Keigo: Sonkeigo", "summary": "Respectful.", "link": f"{TAE_KIM}honorific"}, 
-                "cyber": {"topic": "Project: Basic Sniffer", "summary": "Build CLI tool.", "link": "https://github.com/"}},
-            7: {"math": {"topic": "Week 21 Review", "summary": "Logic & Sets.", "link": TREFOR_DISCRETE}, 
-                "jp": {"topic": "Keigo Audit", "summary": "Review.", "link": "https://apps.ankiweb.net/"}, 
-                "cyber": {"topic": "Log: Journal", "summary": "Update Log.", "link": "https://github.com/"}}
-        }},
-        25: {"phase": "Phase 3: Discrete Math & Net-Sentry", "days": {
-            1: {"math": {"topic": "Combinatorics", "summary": "Permutations.", "link": f"{KHAN}Permutations"}, 
-                "jp": {"topic": "Transitive Verbs", "summary": "Action on object.", "link": f"{TAE_KIM}transitive"}, 
-                "cyber": {"topic": "Attack Sim: Nmap", "summary": "Scan your VM.", "link": "https://nmap.org/book/man.html"}},
-            2: {"math": {"topic": "Combinations", "summary": "Order implies set.", "link": f"{KHAN}Combinations"}, 
-                "jp": {"topic": "Intransitive Verbs", "summary": "Action happens.", "link": f"{TAE_KIM}transitive"}, 
-                "cyber": {"topic": "Lab: Capture Scan", "summary": "Record Nmap.", "link": SCAPY_DOCS}},
-            3: {"math": {"topic": "Pigeonhole Principle", "summary": "Proof concept.", "link": TREFOR_DISCRETE}, 
-                "jp": {"topic": "Trans/Intrans Pairs", "summary": "Drill.", "link": f"{TAE_KIM}transitive"}, 
-                "cyber": {"topic": "Lab: Signatures", "summary": "Identify flags.", "link": SCAPY_DOCS}},
-            4: {"math": {"topic": "Binomial Coeffs", "summary": "Pascal's Triangle.", "link": f"{KHAN}Binomial+coefficient"}, 
-                "jp": {"topic": "Appearance (~Sou)", "summary": "Looks like...", "link": f"{TAE_KIM}similarity"}, 
-                "cyber": {"topic": "Python: Detection", "summary": "Detect SYN pattern.", "link": SCAPY_DOCS}},
-            5: {"math": {"topic": "Bayes' Theorem", "summary": "Conditional Prob.", "link": f"{KHAN}Bayes+theorem"}, 
-                "jp": {"topic": "Hearsay (~Sou)", "summary": "I heard...", "link": f"{TAE_KIM}hearsay"}, 
-                "cyber": {"topic": "Project: Scan Alert", "summary": "Print ALERT.", "link": "https://github.com/"}},
-            6: {"math": {"topic": "Expected Value", "summary": "Weighted average.", "link": f"{KHAN}Expected+value"}, 
-                "jp": {"topic": "Likeness (~You)", "summary": "Metaphor.", "link": f"{TAE_KIM}similarity"}, 
-                "cyber": {"topic": "Paper: IDS", "summary": "Read IDS paper.", "link": ARXIV}},
-            7: {"math": {"topic": "Exam: Midterm", "summary": "Discrete Math.", "link": TREFOR_DISCRETE}, 
-                "jp": {"topic": "Monthly Review", "summary": "Audit.", "link": "https://apps.ankiweb.net/"}, 
-                "cyber": {"topic": "Log: Journal", "summary": "Update Log.", "link": "https://github.com/"}}
-        }},
-        30: {"phase": "Phase 3: Net-Sentry V1.0 Launch", "days": {
-            1: {"math": {"topic": "Project Week", "summary": "Code focus.", "link": "https://github.com/"}, "jp": {"topic": "Causative Rev", "summary": "Review.", "link": TAE_KIM}, "cyber": {"topic": "Code: Refactor", "summary": "Clean code.", "link": "https://peps.python.org/pep-0008/"}},
-            2: {"math": {"topic": "Project Week", "summary": "Code focus.", "link": "https://github.com/"}, "jp": {"topic": "Keigo Rev", "summary": "Review.", "link": TAE_KIM}, "cyber": {"topic": "Docs: README", "summary": "Write docs.", "link": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"}},
-            3: {"math": {"topic": "Project Week", "summary": "Code focus.", "link": "https://github.com/"}, "jp": {"topic": "Business Phrases", "summary": "Vocab.", "link": JLPT_SENSEI}, "cyber": {"topic": "Test: Live Run", "summary": "Home network.", "link": "https://github.com/"}},
-            4: {"math": {"topic": "Project Week", "summary": "Code focus.", "link": "https://github.com/"}, "jp": {"topic": "Phone Call", "summary": "Phrases.", "link": JLPT_SENSEI}, "cyber": {"topic": "Release: GitHub", "summary": "Push v1.0.", "link": "https://github.com/"}},
-            5: {"math": {"topic": "Project Week", "summary": "Code focus.", "link": "https://github.com/"}, "jp": {"topic": "Advice Rev", "summary": "Review.", "link": TAE_KIM}, "cyber": {"topic": "Video: Demo", "summary": "Record demo.", "link": "https://obsproject.com/"}},
-            6: {"math": {"topic": "Project Week", "summary": "Code focus.", "link": "https://github.com/"}, "jp": {"topic": "Regret Rev", "summary": "Review.", "link": TAE_KIM}, "cyber": {"topic": "Submit: Portfolio", "summary": "Add to CV.", "link": "https://linkedin.com/"}},
-            7: {"math": {"topic": "MILESTONE", "summary": "Net-Sentry Live.", "link": "https://github.com/"}, "jp": {"topic": "Keigo Audit", "summary": "Final check.", "link": TAE_KIM}, "cyber": {"topic": "Celebration", "summary": "Phase 3 Done.", "link": "https://www.youtube.com/"}}
-        }},
+# --- 2. PARSING ENGINE ---
+@st.cache_data
+def parse_html_data(html_string):
+    """
+    Parses the embedded HTML string into a structured DataFrame.
+    """
+    soup = BeautifulSoup(html_string, 'html.parser')
+    rows = soup.find_all('tr')
+    
+    data = []
+    
+    for row in rows:
+        cells = row.find_all('td')
+        if not cells:
+            continue
+            
+        # Get clean text
+        get_text = lambda x: x.get_text(" ", strip=True)
+        
+        # Check column count to determine phase structure
+        # Phase 1-2 usually has 6 columns (Link column separate)
+        # Phase 3-4 usually has 5 columns (Links embedded)
+        
+        week = get_text(cells[0])
+        day_str = get_text(cells[1])
+        
+        if not day_str.isdigit():
+            continue
+            
+        day = int(day_str)
+        
+        math_topic, math_link = "", ""
+        jp_topic, jp_link = "", ""
+        cyber_topic, cyber_link = "", ""
+        
+        if len(cells) >= 6:
+            # Structure: Week | Day | Math | JP | Cyber | Links
+            math_topic = get_text(cells[2])
+            jp_topic = get_text(cells[3])
+            cyber_topic = get_text(cells[4])
+            
+            # Extract links from the 6th column
+            link_cell = cells[5]
+            links = link_cell.find_all('a')
+            
+            # Heuristic: 1st link -> Math, 2nd -> JP, 3rd -> Cyber
+            if len(links) >= 1: math_link = links[0].get('href', '')
+            if len(links) >= 2: jp_link = links[1].get('href', '')
+            if len(links) >= 3: cyber_link = links[2].get('href', '')
+            
+        elif len(cells) == 5:
+            # Structure: Week | Day | Math(Link) | JP(Link) | Cyber(Link)
+            def extract_cell(cell):
+                text = get_text(cell)
+                link_tag = cell.find('a')
+                link = link_tag.get('href', '') if link_tag else ""
+                return text, link
+            
+            math_topic, math_link = extract_cell(cells[2])
+            jp_topic, jp_link = extract_cell(cells[3])
+            cyber_topic, cyber_link = extract_cell(cells[4])
 
-        # --- PHASE 4: LINEAR ALGEBRA & AI RESEARCH (Weeks 31-40) ---
-        # FOCUS: Math of AI (Vectors/Matrices) + OIST Proposal + AI Tool
-        31: {"phase": "Phase 4: Linear Algebra & AI Research", "days": {
-            1: {"math": {"topic": "Vectors Intro", "summary": "Magnitude/Direction.", "link": f"{KHAN}Vectors"}, 
-                "jp": {"topic": "Academic Vocab", "summary": "Research terms.", "link": JLPT_SENSEI}, 
-                "cyber": {"topic": "Intro to AI Security", "summary": "Adversarial ML.", "link": "https://openai.com/research/attacking-machine-learning"}},
-            2: {"math": {"topic": "Vector Ops", "summary": "Add/Scale.", "link": f"{KHAN}Vector+addition"}, 
-                "jp": {"topic": "Formal Writing", "summary": "Thesis style.", "link": f"{TAE_KIM}formal"}, 
-                "cyber": {"topic": "Concept: Supervised", "summary": "Labelled data.", "link": "https://developers.google.com/machine-learning/crash-course"}},
-            3: {"math": {"topic": "Dot Product", "summary": "Similarity.", "link": f"{KHAN}Dot+product"}, 
-                "jp": {"topic": "Reading Tech", "summary": "Qiita.", "link": "https://qiita.com/"}, 
-                "cyber": {"topic": "Concept: Unsupervised", "summary": "Clustering.", "link": "https://developers.google.com/machine-learning/crash-course"}},
-            4: {"math": {"topic": "Unit Vectors", "summary": "Normalization.", "link": f"{KHAN}Unit+vector"}, 
-                "jp": {"topic": "Speaking Prep", "summary": "Self-intro.", "link": "https://vocaroo.com/"}, 
-                "cyber": {"topic": "Lab: Scikit-Learn", "summary": "Install.", "link": SKLEARN}},
-            5: {"math": {"topic": "Linear Combinations", "summary": "Spanning space.", "link": f"{KHAN}Linear+combinations"}, 
-                "jp": {"topic": "Research Email", "summary": "Draft email.", "link": f"{TOFUGU}writing-emails-in-japanese/"}, 
-                "cyber": {"topic": "Lab: Pandas", "summary": "Loading Data.", "link": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/02_read_write.html"}},
-            6: {"math": {"topic": "Basis Vectors", "summary": "Coordinates.", "link": f"{KHAN}Basis+vectors"}, 
-                "jp": {"topic": "Listening", "summary": "Tech news.", "link": "https://www.youtube.com/user/NHKonline"}, 
-                "cyber": {"topic": "Paper: ML in Cyber", "summary": "Read survey.", "link": ARXIV}},
-            7: {"math": {"topic": "Week 31 Review", "summary": "Vectors.", "link": MIT_LIN_ALG}, 
-                "jp": {"topic": "Review", "summary": "Audit.", "link": "https://apps.ankiweb.net/"}, 
-                "cyber": {"topic": "Log: Journal", "summary": "Update Log.", "link": "https://github.com/"}}
-        }},
-        35: {"phase": "Phase 4: Linear Algebra & AI Research", "days": {
-            1: {"math": {"topic": "Orthogonality", "summary": "Perpendicular.", "link": f"{KHAN}Orthogonal+vectors"}, 
-                "jp": {"topic": "Particle SHI", "summary": "Listing reasons.", "link": f"{TAE_KIM}particles"}, 
-                "cyber": {"topic": "OIST Prep: CV", "summary": "Polish CV.", "link": OIST_URL}},
-            2: {"math": {"topic": "Orthogonal Sets", "summary": "Independence.", "link": MIT_LIN_ALG}, 
-                "jp": {"topic": "NAGARA", "summary": "While doing...", "link": f"{TAE_KIM}concurrent"}, 
-                "cyber": {"topic": "OIST Prep: SOP", "summary": "Draft Intro.", "link": OIST_URL}},
-            3: {"math": {"topic": "Projections", "summary": "Shadows.", "link": f"{KHAN}Projections+linear+algebra"}, 
-                "jp": {"topic": "NODE/KARA", "summary": "Reasons.", "link": f"{TAE_KIM}compound"}, 
-                "cyber": {"topic": "OIST Prep: SOP", "summary": "Draft Research.", "link": OIST_URL}},
-            4: {"math": {"topic": "Gram-Schmidt", "summary": "Orthonormalizing.", "link": f"{KHAN}Gram+schmidt"}, 
-                "jp": {"topic": "~Kana", "summary": "Wondering.", "link": JLPT_SENSEI}, 
-                "cyber": {"topic": "OIST Prep: SOP", "summary": "Academic History.", "link": OIST_URL}},
-            5: {"math": {"topic": "Least Squares", "summary": "Regression.", "link": f"{KHAN}Least+squares"}, 
-                "jp": {"topic": "Passive Rev", "summary": "Review.", "link": TAE_KIM}, 
-                "cyber": {"topic": "Output: SOP Draft", "summary": "Complete draft.", "link": OIST_URL}},
-            6: {"math": {"topic": "Least Squares II", "summary": "Apps.", "link": MIT_LIN_ALG}, 
-                "jp": {"topic": "Causative Rev", "summary": "Review.", "link": TAE_KIM}, 
-                "cyber": {"topic": "Deadlines", "summary": "Check Internship.", "link": OIST_URL}},
-            7: {"math": {"topic": "Week 35 Review", "summary": "Orthogonality.", "link": MIT_LIN_ALG}, 
-                "jp": {"topic": "Output Check", "summary": "Review SOP.", "link": OIST_URL}, 
-                "cyber": {"topic": "Log: Journal", "summary": "Update Log.", "link": "https://github.com/"}}
-        }},
-        40: {"phase": "Phase 4: Graduation & Application", "days": {
-            1: {"math": {"topic": "PCA Intro", "summary": "Dim Reduction.", "link": "https://setosa.io/ev/principal-component-analysis/"}, "jp": {"topic": "Final Audit", "summary": "N3 Check.", "link": JLPT_SENSEI}, "cyber": {"topic": "Portfolio: Polish", "summary": "Finalize GitHub.", "link": "https://github.com/"}},
-            2: {"math": {"topic": "SVD Intro", "summary": "Singular Value.", "link": MIT_LIN_ALG}, "jp": {"topic": "Interview Prep", "summary": "Why OIST?", "link": "https://vocaroo.com/"}, "cyber": {"topic": "Master's Syllabus", "summary": "Review.", "link": "https://ccsu.edu/"}},
-            3: {"math": {"topic": "Linear Alg Final", "summary": "Review.", "link": MIT_LIN_ALG}, "jp": {"topic": "Resume JP", "summary": "Translate CV.", "link": f"{TOFUGU}resume/"}, "cyber": {"topic": "Submit: Internship", "summary": "Apply.", "link": OIST_URL}},
-            4: {"math": {"topic": "Tensors Preview", "summary": "Deep Learning.", "link": "https://www.tensorflow.org/guide/tensor"}, "jp": {"topic": "Celebration", "summary": "Sushi.", "link": "https://www.youtube.com/"}, "cyber": {"topic": "Email Professors", "summary": "Cold emails.", "link": "https://nii.ac.jp/"}},
-            5: {"math": {"topic": "Master's Prep", "summary": "Textbooks.", "link": "https://amazon.com/"}, "jp": {"topic": "Anki Clean", "summary": "Archive.", "link": "https://apps.ankiweb.net/"}, "cyber": {"topic": "Capstone: Release", "summary": "Public repo.", "link": "https://github.com/"}},
-            6: {"math": {"topic": "Rest", "summary": "Recover.", "link": "https://headspace.com/"}, "jp": {"topic": "Rest", "summary": "Recover.", "link": "https://headspace.com/"}, "cyber": {"topic": "Rest", "summary": "Recover.", "link": "https://headspace.com/"}},
-            7: {"math": {"topic": "GRADUATION", "summary": "Ready.", "link": MIT_LIN_ALG}, "jp": {"topic": "NEXT PHASE", "summary": "Road to OIST.", "link": OIST_URL}, "cyber": {"topic": "MISSION START", "summary": "Begin Cyber MS.", "link": OIST_URL}}
-        }}
-    }
+        # Clean Google Redirects
+        clean = lambda u: u.split("google.com/url?q=")[1].split("&")[0] if "google.com/url?q=" in u else u
+        
+        data.append({
+            "Week": week,
+            "Day": day,
+            "Math Topic": math_topic,
+            "Math Link": clean(math_link),
+            "Japanese Topic": jp_topic,
+            "JP Link": clean(jp_link),
+            "Cyber Topic": cyber_topic,
+            "Cyber Link": clean(cyber_link)
+        })
+        
+    return pd.DataFrame(data)
+
+# --- 3. STREAMLIT APP UI ---
+
+st.set_page_config(page_title="Master Study Schedule", layout="wide")
+
+st.title("📅 Master Study Dashboard")
+st.markdown("""
+**Progress Tracker:** Math (Algebra/Stats/Calc), Japanese (N5-N3), and Cybersecurity (Network+/Security+).
+""")
+
+# Load Data
+df = parse_html_data(RAW_HTML_DATA)
+
+# Filters
+st.sidebar.header("Filters")
+phase_filter = st.sidebar.radio("Select Phase:", 
+    ["All", "Phase 1: Foundations (Days 1-70)", "Phase 2: Security+ (Days 71-140)", "Phase 3: Discrete Math (Days 141-210)", "Phase 4: Linear Algebra (Days 211+)"])
+
+filtered_df = df.copy()
+
+if "Phase 1" in phase_filter:
+    filtered_df = df[df['Day'] <= 70]
+elif "Phase 2" in phase_filter:
+    filtered_df = df[(df['Day'] > 70) & (df['Day'] <= 140)]
+elif "Phase 3" in phase_filter:
+    filtered_df = df[(df['Day'] > 140) & (df['Day'] <= 210)]
+elif "Phase 4" in phase_filter:
+    filtered_df = df[df['Day'] > 210]
+
+# Search
+search_q = st.sidebar.text_input("🔍 Search Topics")
+if search_q:
+    filtered_df = filtered_df[
+        filtered_df['Math Topic'].str.contains(search_q, case=False) |
+        filtered_df['Japanese Topic'].str.contains(search_q, case=False) |
+        filtered_df['Cyber Topic'].str.contains(search_q, case=False)
+    ]
+
+# Display Helper
+def make_link(text, url):
+    if url and text:
+        return f"[{text}]({url})"
+    return text
+
+display_df = filtered_df.copy()
+display_df['Math'] = display_df.apply(lambda x: make_link(x['Math Topic'], x['Math Link']), axis=1)
+display_df['Japanese'] = display_df.apply(lambda x: make_link(x['Japanese Topic'], x['JP Link']), axis=1)
+display_df['Cybersecurity'] = display_df.apply(lambda x: make_link(x['Cyber Topic'], x['Cyber Link']), axis=1)
+
+final_view = display_df[['Week', 'Day', 'Math', 'Japanese', 'Cybersecurity']]
+
+st.markdown(f"### Showing {len(final_view)} Days")
+st.markdown(final_view.to_markdown(index=False), unsafe_allow_html=True)
+
+# Metrics
+st.sidebar.markdown("---")
+progress = min(1.0, len(filtered_df) / 280)
+st.sidebar.progress(progress)
+st.sidebar.write(f"Total Days Loaded: **{len(df)}**")
