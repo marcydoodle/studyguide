@@ -42,7 +42,8 @@ PORT_SWIGGER = "https://portswigger.net/web-security/dashboard"
 KHAN_ALG = "https://www.khanacademy.org/math/algebra"
 KHAN_CALC1 = "https://www.khanacademy.org/math/calculus-1"
 KHAN_LINALG = "https://www.khanacademy.org/math/linear-algebra"
-KHAN_MULTI = "https://www.khanacademy.org/math/multivariable-calculus"
+# Replaced Multivariable Calc link with Discrete Math / Statistics
+KHAN_STATS = "https://www.khanacademy.org/math/statistics-probability" 
 
 # --- CURRICULUM DATA (WEEKS 1-40) ---
 def get_curriculum():
@@ -228,49 +229,119 @@ def get_curriculum():
         # PHASE 3: LINEAR ALGEBRA & CYSA+ (Weeks 20-24)
         # ==========================================
         20: {"phase": "Phase 3: Pivot to Blue Team", "days": {
-            1: {"math": {"topic": "Vectors Intro", "summary": "Definition, R2/R3, geometric interpretation.", "link": KHAN_LINALG}, "jp": {"topic": "N4 Review", "summary": "Solidify passive/causative forms.", "link": "http://www.guidetojapanese.org/"}, "cyber": {"topic": "CySA+ Domain 1", "summary": "Threat Intelligence concepts.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Vector Add/Sub", "summary": "Head-to-tail, parallelogram rules.", "link": KHAN_LINALG}, "jp": {"topic": "Kanji N4 Audit", "summary": "Review weak Kanji.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Threat Actors", "summary": "APT, Hacktivist, Insider profiles.", "link": MESSER_NET}},
-            3: {"math": {"topic": "Scalar Multiplication", "summary": "Scaling vectors, direction reversals.", "link": KHAN_LINALG}, "jp": {"topic": "Listening N4", "summary": "JLPT Sample audio.", "link": "https://www.youtube.com/"}, "cyber": {"topic": "Kill Chain", "summary": "Lockheed Martin Cyber Kill Chain.", "link": MESSER_NET}},
-            4: {"math": {"topic": "Dot Product", "summary": "Calculation and geometric meaning (angle).", "link": KHAN_LINALG}, "jp": {"topic": "Reading N4", "summary": "Short stories/NHKEasy.", "link": "https://www3.nhk.or.jp/news/easy/"}, "cyber": {"topic": "MITRE ATT&CK", "summary": "Tactics, Techniques, and Procedures (TTPs).", "link": "https://attack.mitre.org/"}},
-            5: {"math": {"topic": "Unit Vectors", "summary": "Normalization and standard basis.", "link": KHAN_LINALG}, "jp": {"topic": "Writing", "summary": "Simple diary entry.", "link": "https://lang-8.com/"}, "cyber": {"topic": "Diamond Model", "summary": "Intrusion analysis.", "link": MESSER_NET}},
-            6: {"math": {"topic": "Parametric Lines", "summary": "Line equations in vector form.", "link": KHAN_LINALG}, "jp": {"topic": "Speaking", "summary": "Shadowing basics.", "link": "https://www.tofugu.com/"}, "cyber": {"topic": "Log Types", "summary": "Firewall, Switch, Router, Server logs.", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 20 Review", "summary": "Vectors basics.", "link": KHAN_LINALG}, "jp": {"topic": "Weekly Test", "summary": "N4 Grammar quiz.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Lab: SIEM Intro", "summary": "Install Splunk Free or ELK Stack.", "link": "https://www.splunk.com/"}}
+            1: {"math": {"topic": "Vectors Intro", "summary": "Definition, R2/R3, geometric interpretation.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "N4 Review", "summary": "Solidify passive/causative forms.", "link": "http://www.guidetojapanese.org/"}, 
+                "cyber": {"topic": "CySA+ Domain 1", "summary": "Threat Intelligence concepts.", "link": MESSER_NET}},
+            2: {"math": {"topic": "Vector Add/Sub", "summary": "Head-to-tail, parallelogram rules.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Kanji N4 Audit", "summary": "Review weak Kanji.", "link": "https://kanji.garden/"}, 
+                "cyber": {"topic": "Threat Actors", "summary": "APT, Hacktivist, Insider profiles.", "link": MESSER_NET}},
+            3: {"math": {"topic": "Scalar Multiplication", "summary": "Scaling vectors, direction reversals.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Listening N4", "summary": "JLPT Sample audio.", "link": "https://www.youtube.com/"}, 
+                "cyber": {"topic": "Kill Chain", "summary": "Lockheed Martin Cyber Kill Chain.", "link": MESSER_NET}},
+            4: {"math": {"topic": "Dot Product", "summary": "Calculation and geometric meaning (angle).", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Reading N4", "summary": "Short stories/NHKEasy.", "link": "https://www3.nhk.or.jp/news/easy/"}, 
+                "cyber": {"topic": "MITRE ATT&CK", "summary": "Tactics, Techniques, and Procedures (TTPs).", "link": "https://attack.mitre.org/"}},
+            5: {"math": {"topic": "Unit Vectors", "summary": "Normalization and standard basis.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Writing", "summary": "Simple diary entry.", "link": "https://lang-8.com/"}, 
+                "cyber": {"topic": "Diamond Model", "summary": "Intrusion analysis.", "link": MESSER_NET}},
+            6: {"math": {"topic": "Parametric Lines", "summary": "Line equations in vector form.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Speaking", "summary": "Shadowing basics.", "link": "https://www.tofugu.com/"}, 
+                "cyber": {"topic": "Log Types", "summary": "Firewall, Switch, Router, Server logs.", "link": MESSER_NET}},
+            7: {"math": {"topic": "Week 20 Review", "summary": "Vectors basics.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Weekly Test", "summary": "N4 Grammar quiz.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Lab: SIEM Intro", "summary": "Install Splunk Free or ELK Stack.", "link": "https://www.splunk.com/"}}
         }},
         21: {"phase": "Phase 3: Linear Algebra & CySA+", "days": {
-            1: {"math": {"topic": "Linear Combinations", "summary": "Spanning a space.", "link": KHAN_LINALG}, "jp": {"topic": "N3 Intro", "summary": "Overview of N3 roadmap.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Syslog & Rsyslog", "summary": "Log collection standards.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Span", "summary": "The set of all linear combinations.", "link": KHAN_LINALG}, "jp": {"topic": "~Bakari (N3)", "summary": "Just finished doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Windows Events", "summary": "Event IDs (4624, 4625, etc).", "link": MESSER_NET}},
-            3: {"math": {"topic": "Linear Independence", "summary": "Redundant vectors.", "link": KHAN_LINALG}, "jp": {"topic": "~Sa (Suffix)", "summary": "Turning adj into nouns.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Linux Logs", "summary": "/var/log/auth.log, syslog, etc.", "link": MESSER_NET}},
-            4: {"math": {"topic": "Subspaces", "summary": "Closure under add/mult.", "link": KHAN_LINALG}, "jp": {"topic": "~Mitaida", "summary": "Looks like (N3).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Vulnerability Mgmt", "summary": "Identification -> Remediation.", "link": MESSER_NET}},
-            5: {"math": {"topic": "Basis", "summary": "Minimal spanning set.", "link": KHAN_LINALG}, "jp": {"topic": "~Rashii", "summary": "Typical of.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CVSS Scoring", "summary": "Base, Temporal, Environmental metrics.", "link": "https://nvd.nist.gov/vuln-metrics/cvss"}},
-            6: {"math": {"topic": "Dimension", "summary": "Number of vectors in basis.", "link": KHAN_LINALG}, "jp": {"topic": "~Ppoi", "summary": "-ish (Casual).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Scanner Types", "summary": "Credentialed vs Non-credentialed.", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 21 Review", "summary": "Span and Basis.", "link": KHAN_LINALG}, "jp": {"topic": "N3 Vocab", "summary": "Anki N3 Deck start.", "link": "https://ankiweb.net/"}, "cyber": {"topic": "Lab: Nessus", "summary": "Run a vulnerability scan.", "link": "https://www.tenable.com/"}}
+            1: {"math": {"topic": "Linear Combinations", "summary": "Spanning a space.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "N3 Intro", "summary": "Overview of N3 roadmap.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Syslog & Rsyslog", "summary": "Log collection standards.", "link": MESSER_NET}},
+            2: {"math": {"topic": "Span", "summary": "The set of all linear combinations.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Bakari (N3)", "summary": "Just finished doing.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Windows Events", "summary": "Event IDs (4624, 4625, etc).", "link": MESSER_NET}},
+            3: {"math": {"topic": "Linear Independence", "summary": "Redundant vectors.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Sa (Suffix)", "summary": "Turning adj into nouns.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Linux Logs", "summary": "/var/log/auth.log, syslog, etc.", "link": MESSER_NET}},
+            4: {"math": {"topic": "Subspaces", "summary": "Closure under add/mult.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Mitaida", "summary": "Looks like (N3).", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Vulnerability Mgmt", "summary": "Identification -> Remediation.", "link": MESSER_NET}},
+            5: {"math": {"topic": "Basis", "summary": "Minimal spanning set.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Rashii", "summary": "Typical of.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "CVSS Scoring", "summary": "Base, Temporal, Environmental metrics.", "link": "https://nvd.nist.gov/vuln-metrics/cvss"}},
+            6: {"math": {"topic": "Dimension", "summary": "Number of vectors in basis.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Ppoi", "summary": "-ish (Casual).", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Scanner Types", "summary": "Credentialed vs Non-credentialed.", "link": MESSER_NET}},
+            7: {"math": {"topic": "Week 21 Review", "summary": "Span and Basis.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "N3 Vocab", "summary": "Anki N3 Deck start.", "link": "https://ankiweb.net/"}, 
+                "cyber": {"topic": "Lab: Nessus", "summary": "Run a vulnerability scan.", "link": "https://www.tenable.com/"}}
         }},
         22: {"phase": "Phase 3: Linear Algebra & CySA+", "days": {
-            1: {"math": {"topic": "Matrices Intro", "summary": "Rows, Cols, Notation.", "link": KHAN_LINALG}, "jp": {"topic": "~Gachi", "summary": "Tend to be.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Software Security", "summary": "SDLC integration.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Matrix mult (Vector)", "summary": "Matrix-Vector products.", "link": KHAN_LINALG}, "jp": {"topic": "~Kimi", "summary": "Slightly/Touch of.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "OWASP Top 10", "summary": "Review with defensive mindset.", "link": "https://owasp.org/"}},
-            3: {"math": {"topic": "Matrix mult (Matrix)", "summary": "Matrix-Matrix products.", "link": KHAN_LINALG}, "jp": {"topic": "~Darake", "summary": "Full of (negative).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Code Analysis", "summary": "Static (SAST) vs Dynamic (DAST).", "link": MESSER_NET}},
-            4: {"math": {"topic": "Linear Transformations", "summary": "Matrices as functions.", "link": KHAN_LINALG}, "jp": {"topic": "~Muki", "summary": "Suitable for.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Identity Federation", "summary": "SAML, OAuth, OpenID Connect.", "link": MESSER_NET}},
-            5: {"math": {"topic": "Identity Matrix", "summary": "Properties of I.", "link": KHAN_LINALG}, "jp": {"topic": "~Muke", "summary": "Made for.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Access Controls", "summary": "MAC, DAC, RBAC, ABAC.", "link": MESSER_NET}},
-            6: {"math": {"topic": "Matrix Transpose", "summary": "Flipping rows/cols.", "link": KHAN_LINALG}, "jp": {"topic": "Comparisons", "summary": "Review N3 comparison grammar.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Cloud Security", "summary": "Shared Responsibility Model.", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 22 Review", "summary": "Matrices.", "link": KHAN_LINALG}, "jp": {"topic": "N3 Kanji", "summary": "First 50 N3 Kanji.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Lab: Burp Suite", "summary": "Analyze web traffic.", "link": "https://portswigger.net/"}}
+            1: {"math": {"topic": "Matrices Intro", "summary": "Rows, Cols, Notation.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Gachi", "summary": "Tend to be.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Software Security", "summary": "SDLC integration.", "link": MESSER_NET}},
+            2: {"math": {"topic": "Matrix mult (Vector)", "summary": "Matrix-Vector products.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Kimi", "summary": "Slightly/Touch of.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "OWASP Top 10", "summary": "Review with defensive mindset.", "link": "https://owasp.org/"}},
+            3: {"math": {"topic": "Matrix mult (Matrix)", "summary": "Matrix-Matrix products.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Darake", "summary": "Full of (negative).", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Code Analysis", "summary": "Static (SAST) vs Dynamic (DAST).", "link": MESSER_NET}},
+            4: {"math": {"topic": "Linear Transformations", "summary": "Matrices as functions.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Muki", "summary": "Suitable for.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Identity Federation", "summary": "SAML, OAuth, OpenID Connect.", "link": MESSER_NET}},
+            5: {"math": {"topic": "Identity Matrix", "summary": "Properties of I.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Muke", "summary": "Made for.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Access Controls", "summary": "MAC, DAC, RBAC, ABAC.", "link": MESSER_NET}},
+            6: {"math": {"topic": "Matrix Transpose", "summary": "Flipping rows/cols.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Comparisons", "summary": "Review N3 comparison grammar.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Cloud Security", "summary": "Shared Responsibility Model.", "link": MESSER_NET}},
+            7: {"math": {"topic": "Week 22 Review", "summary": "Matrices.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "N3 Kanji", "summary": "First 50 N3 Kanji.", "link": "https://kanji.garden/"}, 
+                "cyber": {"topic": "Lab: Burp Suite", "summary": "Analyze web traffic.", "link": "https://portswigger.net/"}}
         }},
         23: {"phase": "Phase 3: Linear Algebra & CySA+", "days": {
-            1: {"math": {"topic": "Gaussian Elimination", "summary": "Row reduction (RREF).", "link": KHAN_LINALG}, "jp": {"topic": "~Koto da", "summary": "You should (advice).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Incident Response", "summary": "Detection & Analysis.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Solving Linear Systems", "summary": "Using RREF.", "link": KHAN_LINALG}, "jp": {"topic": "~Ni Niteiru", "summary": "Resembles.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Containment", "summary": "Isolation strategies.", "link": MESSER_NET}},
-            3: {"math": {"topic": "Homogeneous Systems", "summary": "Ax = 0 solutions.", "link": KHAN_LINALG}, "jp": {"topic": "~You ni suru", "summary": "Make effort to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Eradication", "summary": "Sanitization & Reimaging.", "link": MESSER_NET}},
-            4: {"math": {"topic": "Non-Homogeneous", "summary": "Ax = b solutions.", "link": KHAN_LINALG}, "jp": {"topic": "~You ni naru", "summary": "Become able to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Recovery", "summary": "Restoration priorities.", "link": MESSER_NET}},
-            5: {"math": {"topic": "Matrix Inverses", "summary": "Calculating A^-1.", "link": KHAN_LINALG}, "jp": {"topic": "~You da", "summary": "Appears to be.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Post-Incident", "summary": "Lessons Learned.", "link": MESSER_NET}},
-            6: {"math": {"topic": "Invertibility Thm", "summary": "Conditions for inverse.", "link": KHAN_LINALG}, "jp": {"topic": "Keigo (N3)", "summary": "Review honorifics.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Digital Forensics", "summary": "Chain of Custody.", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 23 Review", "summary": "Systems of Eq.", "link": KHAN_LINALG}, "jp": {"topic": "N3 Reading", "summary": "Mid-length articles.", "link": "https://www3.nhk.or.jp/"}, "cyber": {"topic": "Lab: IR Plan", "summary": "Draft a tabletop exercise.", "link": "https://www.cisa.gov/"}}
+            1: {"math": {"topic": "Gaussian Elimination", "summary": "Row reduction (RREF).", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Koto da", "summary": "You should (advice).", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Incident Response", "summary": "Detection & Analysis.", "link": MESSER_NET}},
+            2: {"math": {"topic": "Solving Linear Systems", "summary": "Using RREF.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Ni Niteiru", "summary": "Resembles.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Containment", "summary": "Isolation strategies.", "link": MESSER_NET}},
+            3: {"math": {"topic": "Homogeneous Systems", "summary": "Ax = 0 solutions.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~You ni suru", "summary": "Make effort to.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Eradication", "summary": "Sanitization & Reimaging.", "link": MESSER_NET}},
+            4: {"math": {"topic": "Non-Homogeneous", "summary": "Ax = b solutions.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~You ni naru", "summary": "Become able to.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Recovery", "summary": "Restoration priorities.", "link": MESSER_NET}},
+            5: {"math": {"topic": "Matrix Inverses", "summary": "Calculating A^-1.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~You da", "summary": "Appears to be.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Post-Incident", "summary": "Lessons Learned.", "link": MESSER_NET}},
+            6: {"math": {"topic": "Invertibility Thm", "summary": "Conditions for inverse.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Keigo (N3)", "summary": "Review honorifics.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Digital Forensics", "summary": "Chain of Custody.", "link": MESSER_NET}},
+            7: {"math": {"topic": "Week 23 Review", "summary": "Systems of Eq.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "N3 Reading", "summary": "Mid-length articles.", "link": "https://www3.nhk.or.jp/"}, 
+                "cyber": {"topic": "Lab: IR Plan", "summary": "Draft a tabletop exercise.", "link": "https://www.cisa.gov/"}}
         }},
         24: {"phase": "Phase 3: Linear Algebra & CySA+", "days": {
-            1: {"math": {"topic": "Determinants (2x2)", "summary": "ad-bc.", "link": KHAN_LINALG}, "jp": {"topic": "~Wake da", "summary": "That's why.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Forensics Tools", "summary": "FTK, EnCase, Volatility.", "link": MESSER_NET}},
-            2: {"math": {"topic": "Determinants (3x3)", "summary": "Cofactor expansion.", "link": KHAN_LINALG}, "jp": {"topic": "~Wake ga nai", "summary": "No way that...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Network Forensics", "summary": "Wireshark, TCPDump.", "link": MESSER_NET}},
-            3: {"math": {"topic": "Determinant Props", "summary": "Mult/Row Ops.", "link": KHAN_LINALG}, "jp": {"topic": "~Wake dewa nai", "summary": "Doesn't mean that...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Endpoint Forensics", "summary": "Registry, Event Logs.", "link": MESSER_NET}},
-            4: {"math": {"topic": "Cross Product", "summary": "Geometry in R3.", "link": KHAN_LINALG}, "jp": {"topic": "~Hazu da", "summary": "Supposed to be.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Compliance Frameworks", "summary": "GDPR, PCI-DSS, HIPAA.", "link": MESSER_NET}},
-            5: {"math": {"topic": "Cramer's Rule", "summary": "Solving with Dets.", "link": KHAN_LINALG}, "jp": {"topic": "~Hazu ga nai", "summary": "Cannot be.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Risk Management", "summary": "Risk Register, Heat maps.", "link": MESSER_NET}},
-            6: {"math": {"topic": "Volume of Parallelepiped", "summary": "Scalar triple product.", "link": KHAN_LINALG}, "jp": {"topic": "N3 Grammar", "summary": "Halfway check.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Privacy", "summary": "PII, PHI, Data Sovereignty.", "link": MESSER_NET}},
-            7: {"math": {"topic": "Week 24 Review", "summary": "Determinants.", "link": KHAN_LINALG}, "jp": {"topic": "Mock N3 Quiz", "summary": "20 questions.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Lab: Volatility", "summary": "Analyze a memory dump.", "link": "https://github.com/volatilityfoundation/volatility"}}
+            1: {"math": {"topic": "Determinants (2x2)", "summary": "ad-bc.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Wake da", "summary": "That's why.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Forensics Tools", "summary": "FTK, EnCase, Volatility.", "link": MESSER_NET}},
+            2: {"math": {"topic": "Determinants (3x3)", "summary": "Cofactor expansion.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Wake ga nai", "summary": "No way that...", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Network Forensics", "summary": "Wireshark, TCPDump.", "link": MESSER_NET}},
+            3: {"math": {"topic": "Determinant Props", "summary": "Mult/Row Ops.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Wake dewa nai", "summary": "Doesn't mean that...", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Endpoint Forensics", "summary": "Registry, Event Logs.", "link": MESSER_NET}},
+            4: {"math": {"topic": "Cross Product", "summary": "Geometry in R3.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Hazu da", "summary": "Supposed to be.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Compliance Frameworks", "summary": "GDPR, PCI-DSS, HIPAA.", "link": MESSER_NET}},
+            5: {"math": {"topic": "Cramer's Rule", "summary": "Solving with Dets.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "~Hazu ga nai", "summary": "Cannot be.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Risk Management", "summary": "Risk Register, Heat maps.", "link": MESSER_NET}},
+            6: {"math": {"topic": "Volume of Parallelepiped", "summary": "Scalar triple product.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "N3 Grammar", "summary": "Halfway check.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Privacy", "summary": "PII, PHI, Data Sovereignty.", "link": MESSER_NET}},
+            7: {"math": {"topic": "Week 24 Review", "summary": "Determinants.", "link": KHAN_LINALG}, 
+                "jp": {"topic": "Mock N3 Quiz", "summary": "20 questions.", "link": "https://jlptsensei.com/"}, 
+                "cyber": {"topic": "Lab: Volatility", "summary": "Analyze a memory dump.", "link": "https://github.com/volatilityfoundation/volatility"}}
         }},
         # ==========================================
         # PHASE 4: LINALG II & PENTEST+ (Weeks 25-30)
@@ -330,91 +401,91 @@ def get_curriculum():
             7: {"math": {"topic": "PHASE 4 DONE", "summary": "Review.", "link": KHAN_LINALG}, "jp": {"topic": "CELEBRATE", "summary": "Food.", "link": "https://www.justonecookbook.com/"}, "cyber": {"topic": "RETROSPECT", "summary": "Portfolio.", "link": "https://github.com/"}}
         }},
         # ==========================================
-        # PHASE 5: EXPERT (Weeks 31-40)
+        # PHASE 5: EXPERT - DISCRETE MATH & CASP+ (Weeks 31-40)
         # ==========================================
-        31: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "3D Coords", "summary": "x, y, z space.", "link": KHAN_MULTI}, "jp": {"topic": "N2 Intro", "summary": "Textbook selection.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Intro", "summary": "Architecture.", "link": "https://www.comptia.org/"}},
-            2: {"math": {"topic": "Vectors 3D", "summary": "Ops in space.", "link": KHAN_MULTI}, "jp": {"topic": "~Ni taishite", "summary": "In contrast to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Ent Security", "summary": "Frameworks.", "link": "https://www.nist.gov/"}},
-            3: {"math": {"topic": "Dot/Cross 3D", "summary": "Planes/Lines.", "link": KHAN_MULTI}, "jp": {"topic": "~Ni tsuite", "summary": "Regarding.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Zero Trust", "summary": "Never trust.", "link": "https://www.nist.gov/"}},
-            4: {"math": {"topic": "Lines/Planes", "summary": "Equations.", "link": KHAN_MULTI}, "jp": {"topic": "~Ni kanshite", "summary": "Concerning.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Virtualization", "summary": "Microservices.", "link": "https://www.docker.com/"}},
-            5: {"math": {"topic": "Vector Funcs", "summary": "r(t).", "link": KHAN_MULTI}, "jp": {"topic": "~Ni yotte", "summary": "Depending on.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Container Sec", "summary": "Kubernetes.", "link": "https://kubernetes.io/"}},
-            6: {"math": {"topic": "Arc Length 3D", "summary": "Curves.", "link": KHAN_MULTI}, "jp": {"topic": "N2 Vocab", "summary": "Core 2k.", "link": "https://ankiweb.net/"}, "cyber": {"topic": "Serverless", "summary": "Lambda/Azure Func.", "link": "https://aws.amazon.com/"}},
-            7: {"math": {"topic": "Week 31 Rev", "summary": "3D Space.", "link": KHAN_MULTI}, "jp": {"topic": "Reading", "summary": "Tech blog.", "link": "https://qiita.com/"}, "cyber": {"topic": "Lab: Docker", "summary": "Secure container.", "link": "https://www.docker.com/"}}
+        31: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Logic: Prop Logic", "summary": "Truth tables, implications.", "link": KHAN_STATS}, "jp": {"topic": "N2 Intro", "summary": "Textbook selection.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Intro", "summary": "Architecture.", "link": "https://www.comptia.org/"}},
+            2: {"math": {"topic": "Logic: Predicates", "summary": "Quantifiers (For all, Exists).", "link": KHAN_STATS}, "jp": {"topic": "~Ni taishite", "summary": "In contrast to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Ent Security", "summary": "Frameworks.", "link": "https://www.nist.gov/"}},
+            3: {"math": {"topic": "Logic: Proofs", "summary": "Direct, Contrapositive.", "link": KHAN_STATS}, "jp": {"topic": "~Ni tsuite", "summary": "Regarding.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Zero Trust", "summary": "Never trust.", "link": "https://www.nist.gov/"}},
+            4: {"math": {"topic": "Set Theory", "summary": "Unions, Intersections.", "link": KHAN_STATS}, "jp": {"topic": "~Ni kanshite", "summary": "Concerning.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Virtualization", "summary": "Microservices.", "link": "https://www.docker.com/"}},
+            5: {"math": {"topic": "Functions", "summary": "Injective, Surjective.", "link": KHAN_STATS}, "jp": {"topic": "~Ni yotte", "summary": "Depending on.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Container Sec", "summary": "Kubernetes.", "link": "https://kubernetes.io/"}},
+            6: {"math": {"topic": "Relations", "summary": "Reflexive, Symmetric, Transitive.", "link": KHAN_STATS}, "jp": {"topic": "N2 Vocab", "summary": "Core 2k.", "link": "https://ankiweb.net/"}, "cyber": {"topic": "Serverless", "summary": "Lambda/Azure Func.", "link": "https://aws.amazon.com/"}},
+            7: {"math": {"topic": "Week 31 Rev", "summary": "Logic & Sets.", "link": KHAN_STATS}, "jp": {"topic": "Reading", "summary": "Tech blog.", "link": "https://qiita.com/"}, "cyber": {"topic": "Lab: Docker", "summary": "Secure container.", "link": "https://www.docker.com/"}}
         }},
-        32: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Multivar Func", "summary": "f(x,y).", "link": KHAN_MULTI}, "jp": {"topic": "~To shite", "summary": "As a...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Crypto Adv", "summary": "Quantum safe.", "link": "https://csrc.nist.gov/"}},
-            2: {"math": {"topic": "Limits 3D", "summary": "Approaches.", "link": KHAN_MULTI}, "jp": {"topic": "~To tomo ni", "summary": "Together with.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Blockchain", "summary": "Ledger sec.", "link": "https://www.ibm.com/"}},
-            3: {"math": {"topic": "Partial Deriv", "summary": "df/dx.", "link": KHAN_MULTI}, "jp": {"topic": "~Ni tsurete", "summary": "As X happens.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Homomorphic", "summary": "Compute on enc.", "link": "https://www.microsoft.com/"}},
-            4: {"math": {"topic": "Tangent Plane", "summary": "Linear approx.", "link": KHAN_MULTI}, "jp": {"topic": "~Ni shitagatte", "summary": "Following.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Hardware Sec", "summary": "Firmware.", "link": "https://www.cisa.gov/"}},
-            5: {"math": {"topic": "Chain Rule 3D", "summary": "Composition.", "link": KHAN_MULTI}, "jp": {"topic": "~Toori ni", "summary": "According to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Mobile Adv", "summary": "Baseband attacks.", "link": "https://owasp.org/"}},
-            6: {"math": {"topic": "Directional Der", "summary": "Gradient.", "link": KHAN_MULTI}, "jp": {"topic": "Listening", "summary": "News.", "link": "https://www.youtube.com/"}, "cyber": {"topic": "Drone Sec", "summary": "Signal jamming.", "link": "https://www.cisa.gov/"}},
-            7: {"math": {"topic": "Week 32 Rev", "summary": "Partials.", "link": KHAN_MULTI}, "jp": {"topic": "Kanji N2", "summary": "Start.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Lab: GPG", "summary": "Email enc.", "link": "https://gnupg.org/"}}
+        32: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Number Theory", "summary": "Divisibility.", "link": KHAN_STATS}, "jp": {"topic": "~To shite", "summary": "As a...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Crypto Adv", "summary": "Quantum safe.", "link": "https://csrc.nist.gov/"}},
+            2: {"math": {"topic": "Modular Arith", "summary": "Clock math (Mod n).", "link": KHAN_STATS}, "jp": {"topic": "~To tomo ni", "summary": "Together with.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Blockchain", "summary": "Ledger sec.", "link": "https://www.ibm.com/"}},
+            3: {"math": {"topic": "Primes & GCD", "summary": "Euclidean Algorithm.", "link": KHAN_STATS}, "jp": {"topic": "~Ni tsurete", "summary": "As X happens.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Homomorphic", "summary": "Compute on enc.", "link": "https://www.microsoft.com/"}},
+            4: {"math": {"topic": "RSA Math", "summary": "Euler's Totient.", "link": KHAN_STATS}, "jp": {"topic": "~Ni shitagatte", "summary": "Following.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Hardware Sec", "summary": "Firmware.", "link": "https://www.cisa.gov/"}},
+            5: {"math": {"topic": "Induction Rev", "summary": "Strong induction.", "link": KHAN_STATS}, "jp": {"topic": "~Toori ni", "summary": "According to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Mobile Adv", "summary": "Baseband attacks.", "link": "https://owasp.org/"}},
+            6: {"math": {"topic": "Recursion", "summary": "Recursive definitions.", "link": KHAN_STATS}, "jp": {"topic": "Listening", "summary": "News.", "link": "https://www.youtube.com/"}, "cyber": {"topic": "Drone Sec", "summary": "Signal jamming.", "link": "https://www.cisa.gov/"}},
+            7: {"math": {"topic": "Week 32 Rev", "summary": "Num Theory.", "link": KHAN_STATS}, "jp": {"topic": "Kanji N2", "summary": "Start.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Lab: GPG", "summary": "Email enc.", "link": "https://gnupg.org/"}}
         }},
-        33: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Gradient Vec", "summary": "Max ascent.", "link": KHAN_MULTI}, "jp": {"topic": "~Koto kara", "summary": "From the fact.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Risk Mgmt", "summary": "RMF.", "link": "https://csrc.nist.gov/"}},
-            2: {"math": {"topic": "Max/Min 3D", "summary": "Optimization.", "link": KHAN_MULTI}, "jp": {"topic": "~Koto naku", "summary": "Without doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Governance", "summary": "Oversight.", "link": "https://www.isaca.org/"}},
-            3: {"math": {"topic": "Lagrange Mult", "summary": "Constraints.", "link": KHAN_MULTI}, "jp": {"topic": "~Mono da", "summary": "It is natural.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Compliance", "summary": "Intl Stds.", "link": "https://www.iso.org/"}},
-            4: {"math": {"topic": "Lagrange 2", "summary": "Practice.", "link": KHAN_MULTI}, "jp": {"topic": "~Mono dakara", "summary": "Because (Excuse).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Legal", "summary": "E-discovery.", "link": "https://www.americanbar.org/"}},
-            5: {"math": {"topic": "Double Int", "summary": "Volume.", "link": KHAN_MULTI}, "jp": {"topic": "~Mono nara", "summary": "If I could.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Procurement", "summary": "Supply chain.", "link": "https://www.cisa.gov/"}},
-            6: {"math": {"topic": "Iterated Int", "summary": "Order of ops.", "link": KHAN_MULTI}, "jp": {"topic": "Reading", "summary": "Novels.", "link": "https://syosetu.com/"}, "cyber": {"topic": "Vendor Risk", "summary": "Assessments.", "link": "https://www.cisa.gov/"}},
-            7: {"math": {"topic": "Week 33 Rev", "summary": "Optimization.", "link": KHAN_MULTI}, "jp": {"topic": "Writing", "summary": "Essay.", "link": "https://lang-8.com/"}, "cyber": {"topic": "Lab: Risk Assess", "summary": "Mock audit.", "link": "https://www.nist.gov/"}}
+        33: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Counting Basics", "summary": "Pigeonhole Principle.", "link": KHAN_STATS}, "jp": {"topic": "~Koto kara", "summary": "From the fact.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Risk Mgmt", "summary": "RMF.", "link": "https://csrc.nist.gov/"}},
+            2: {"math": {"topic": "Permutations", "summary": "Advanced counting.", "link": KHAN_STATS}, "jp": {"topic": "~Koto naku", "summary": "Without doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Governance", "summary": "Oversight.", "link": "https://www.isaca.org/"}},
+            3: {"math": {"topic": "Combinations", "summary": "Binomial coefficients.", "link": KHAN_STATS}, "jp": {"topic": "~Mono da", "summary": "It is natural.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Compliance", "summary": "Intl Stds.", "link": "https://www.iso.org/"}},
+            4: {"math": {"topic": "Probability Rev", "summary": "Discrete prob.", "link": KHAN_STATS}, "jp": {"topic": "~Mono dakara", "summary": "Because (Excuse).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Legal", "summary": "E-discovery.", "link": "https://www.americanbar.org/"}},
+            5: {"math": {"topic": "Bayes Rev", "summary": "Conditional.", "link": KHAN_STATS}, "jp": {"topic": "~Mono nara", "summary": "If I could.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Procurement", "summary": "Supply chain.", "link": "https://www.cisa.gov/"}},
+            6: {"math": {"topic": "Expected Value", "summary": "Risk calculation.", "link": KHAN_STATS}, "jp": {"topic": "Reading", "summary": "Novels.", "link": "https://syosetu.com/"}, "cyber": {"topic": "Vendor Risk", "summary": "Assessments.", "link": "https://www.cisa.gov/"}},
+            7: {"math": {"topic": "Week 33 Rev", "summary": "Combinatorics.", "link": KHAN_STATS}, "jp": {"topic": "Writing", "summary": "Essay.", "link": "https://lang-8.com/"}, "cyber": {"topic": "Lab: Risk Assess", "summary": "Mock audit.", "link": "https://www.nist.gov/"}}
         }},
-        34: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Double Polar", "summary": "Circular region.", "link": KHAN_MULTI}, "jp": {"topic": "~Tatoe ~Temo", "summary": "Even if.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Cloud Arch", "summary": "Hybrid design.", "link": "https://aws.amazon.com/"}},
-            2: {"math": {"topic": "Center Mass", "summary": "Density.", "link": KHAN_MULTI}, "jp": {"topic": "~Ageku", "summary": "In the end (Bad).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASB", "summary": "Broker.", "link": "https://www.gartner.com/"}},
-            3: {"math": {"topic": "Surface Area", "summary": "3D surfaces.", "link": KHAN_MULTI}, "jp": {"topic": "~Sue ni", "summary": "In the end (Good).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "SDN", "summary": "Software Def Net.", "link": "https://www.cisco.com/"}},
-            4: {"math": {"topic": "Triple Int", "summary": "Hypervolume.", "link": KHAN_MULTI}, "jp": {"topic": "~Amari", "summary": "So much that.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Infrastructure", "summary": "IaC (Terraform).", "link": "https://www.terraform.io/"}},
-            5: {"math": {"topic": "Cylindrical", "summary": "r, theta, z.", "link": KHAN_MULTI}, "jp": {"topic": "~Ijou", "summary": "Since/Now that.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Automation", "summary": "Ansible.", "link": "https://www.ansible.com/"}},
-            6: {"math": {"topic": "Spherical", "summary": "rho, theta, phi.", "link": KHAN_MULTI}, "jp": {"topic": "~Ippo", "summary": "On one hand.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "DevSecOps", "summary": "Pipeline sec.", "link": "https://www.redhat.com/"}},
-            7: {"math": {"topic": "Week 34 Rev", "summary": "Triple Int.", "link": KHAN_MULTI}, "jp": {"topic": "Speaking", "summary": "Advanced.", "link": "https://www.italki.com/"}, "cyber": {"topic": "Lab: Terraform", "summary": "Deploy VPC.", "link": "https://learn.hashicorp.com/"}}
+        34: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Graph Theory", "summary": "Nodes & Edges.", "link": KHAN_STATS}, "jp": {"topic": "~Tatoe ~Temo", "summary": "Even if.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Cloud Arch", "summary": "Hybrid design.", "link": "https://aws.amazon.com/"}},
+            2: {"math": {"topic": "Paths & Cycles", "summary": "Eulerian/Hamiltonian.", "link": KHAN_STATS}, "jp": {"topic": "~Ageku", "summary": "In the end (Bad).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASB", "summary": "Broker.", "link": "https://www.gartner.com/"}},
+            3: {"math": {"topic": "Trees", "summary": "Rooted trees.", "link": KHAN_STATS}, "jp": {"topic": "~Sue ni", "summary": "In the end (Good).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "SDN", "summary": "Software Def Net.", "link": "https://www.cisco.com/"}},
+            4: {"math": {"topic": "Spanning Trees", "summary": "MST Algorithms.", "link": KHAN_STATS}, "jp": {"topic": "~Amari", "summary": "So much that.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Infrastructure", "summary": "IaC (Terraform).", "link": "https://www.terraform.io/"}},
+            5: {"math": {"topic": "Shortest Path", "summary": "Dijkstra's Alg.", "link": KHAN_STATS}, "jp": {"topic": "~Ijou", "summary": "Since/Now that.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Automation", "summary": "Ansible.", "link": "https://www.ansible.com/"}},
+            6: {"math": {"topic": "Network Flow", "summary": "Max flow.", "link": KHAN_STATS}, "jp": {"topic": "~Ippo", "summary": "On one hand.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "DevSecOps", "summary": "Pipeline sec.", "link": "https://www.redhat.com/"}},
+            7: {"math": {"topic": "Week 34 Rev", "summary": "Graphs.", "link": KHAN_STATS}, "jp": {"topic": "Speaking", "summary": "Advanced.", "link": "https://www.italki.com/"}, "cyber": {"topic": "Lab: Terraform", "summary": "Deploy VPC.", "link": "https://learn.hashicorp.com/"}}
         }},
-        35: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Vector Fields", "summary": "Flow.", "link": KHAN_MULTI}, "jp": {"topic": "~Ue de", "summary": "Upon doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Endpoint Adv", "summary": "EDR tuning.", "link": "https://www.crowdstrike.com/"}},
-            2: {"math": {"topic": "Line Int (S)", "summary": "Scalar.", "link": KHAN_MULTI}, "jp": {"topic": "~Ue wa", "summary": "Since (Formal).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "HIPS/NIPS", "summary": "Signatures.", "link": "https://www.trellix.com/"}},
-            3: {"math": {"topic": "Line Int (V)", "summary": "Work.", "link": KHAN_MULTI}, "jp": {"topic": "~Kagiri", "summary": "As long as.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "MDM/UEM", "summary": "Enterprise mobile.", "link": "https://www.vmware.com/"}},
-            4: {"math": {"topic": "Conservative", "summary": "Path indep.", "link": KHAN_MULTI}, "jp": {"topic": "~Osoire ga", "summary": "Fear that.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Boot Sec", "summary": "UEFI/BIOS.", "link": "https://docs.microsoft.com/"}},
-            5: {"math": {"topic": "Potential Func", "summary": "Gradient f.", "link": KHAN_MULTI}, "jp": {"topic": "~Ka ~Nai Ka", "summary": "Whether or not.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "WiFi Ent", "summary": "EAP-TLS.", "link": "https://www.cisco.com/"}},
-            6: {"math": {"topic": "Fund Thm LI", "summary": "Endpoints.", "link": KHAN_MULTI}, "jp": {"topic": "N2 Reading", "summary": "News.", "link": "https://www.asahi.com/"}, "cyber": {"topic": "VPN Adv", "summary": "Always-on.", "link": "https://docs.paloaltonetworks.com/"}},
-            7: {"math": {"topic": "Week 35 Rev", "summary": "Line Integrals.", "link": KHAN_MULTI}, "jp": {"topic": "Immersion", "summary": "Drama.", "link": "https://www.viki.com/"}, "cyber": {"topic": "Lab: EDR", "summary": "Wazuh setup.", "link": "https://wazuh.com/"}}
+        35: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Planar Graphs", "summary": "Euler's Formula.", "link": KHAN_STATS}, "jp": {"topic": "~Ue de", "summary": "Upon doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Endpoint Adv", "summary": "EDR tuning.", "link": "https://www.crowdstrike.com/"}},
+            2: {"math": {"topic": "Coloring", "summary": "Graph coloring.", "link": KHAN_STATS}, "jp": {"topic": "~Ue wa", "summary": "Since (Formal).", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "HIPS/NIPS", "summary": "Signatures.", "link": "https://www.trellix.com/"}},
+            3: {"math": {"topic": "Finite State Machine", "summary": "FSM basics.", "link": KHAN_STATS}, "jp": {"topic": "~Kagiri", "summary": "As long as.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "MDM/UEM", "summary": "Enterprise mobile.", "link": "https://www.vmware.com/"}},
+            4: {"math": {"topic": "Automata", "summary": "DFA/NFA.", "link": KHAN_STATS}, "jp": {"topic": "~Osoire ga", "summary": "Fear that.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Boot Sec", "summary": "UEFI/BIOS.", "link": "https://docs.microsoft.com/"}},
+            5: {"math": {"topic": "Turing Machines", "summary": "Computation limits.", "link": KHAN_STATS}, "jp": {"topic": "~Ka ~Nai Ka", "summary": "Whether or not.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "WiFi Ent", "summary": "EAP-TLS.", "link": "https://www.cisco.com/"}},
+            6: {"math": {"topic": "Algorithm Complexity", "summary": "Big O.", "link": KHAN_STATS}, "jp": {"topic": "N2 Reading", "summary": "News.", "link": "https://www.asahi.com/"}, "cyber": {"topic": "VPN Adv", "summary": "Always-on.", "link": "https://docs.paloaltonetworks.com/"}},
+            7: {"math": {"topic": "Week 35 Rev", "summary": "Automata.", "link": KHAN_STATS}, "jp": {"topic": "Immersion", "summary": "Drama.", "link": "https://www.viki.com/"}, "cyber": {"topic": "Lab: EDR", "summary": "Wazuh setup.", "link": "https://wazuh.com/"}}
         }},
-        36: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Green's Thm", "summary": "2D Curl/Div.", "link": KHAN_MULTI}, "jp": {"topic": "~Kane nai", "summary": "Might happen.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Adv Attacks", "summary": "APT lifecycle.", "link": "https://www.mandiant.com/"}},
-            2: {"math": {"topic": "Flux Intro", "summary": "Flow through.", "link": KHAN_MULTI}, "jp": {"topic": "~Kaneru", "summary": "Cannot do.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Kill Chain", "summary": "Lockheed.", "link": "https://www.lockheedmartin.com/"}},
-            3: {"math": {"topic": "Curl 3D", "summary": "Rotation.", "link": KHAN_MULTI}, "jp": {"topic": "~Gatai", "summary": "Hard to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "MITRE ATT&CK", "summary": "Mapping.", "link": "https://attack.mitre.org/"}},
-            4: {"math": {"topic": "Divergence", "summary": "Expansion.", "link": KHAN_MULTI}, "jp": {"topic": "~Zaru o enai", "summary": "Must do.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Threat Hunt", "summary": "Hypothesis.", "link": "https://www.threathunting.net/"}},
-            5: {"math": {"topic": "Param Surface", "summary": "r(u,v).", "link": KHAN_MULTI}, "jp": {"topic": "~Te yamanai", "summary": "Forever doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "C2 Frameworks", "summary": "Cobalt Strike.", "link": "https://www.cobaltstrike.com/"}},
-            6: {"math": {"topic": "Surface Int", "summary": "Area.", "link": KHAN_MULTI}, "jp": {"topic": "~Ni wa", "summary": "For a...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Data Exfil", "summary": "Techniques.", "link": "https://attack.mitre.org/"}},
-            7: {"math": {"topic": "Week 36 Rev", "summary": "Green's Thm.", "link": KHAN_MULTI}, "jp": {"topic": "Vocab N2", "summary": "Business.", "link": "https://ankiweb.net/"}, "cyber": {"topic": "Lab: C2", "summary": "Sliver C2.", "link": "https://github.com/BishopFox/sliver"}}
+        36: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Boolean Algebra", "summary": "Gates/Circuits.", "link": KHAN_STATS}, "jp": {"topic": "~Kane nai", "summary": "Might happen.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Adv Attacks", "summary": "APT lifecycle.", "link": "https://www.mandiant.com/"}},
+            2: {"math": {"topic": "Logic Simplification", "summary": "Karnaugh Maps.", "link": KHAN_STATS}, "jp": {"topic": "~Kaneru", "summary": "Cannot do.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Kill Chain", "summary": "Lockheed.", "link": "https://www.lockheedmartin.com/"}},
+            3: {"math": {"topic": "Groups & Rings", "summary": "Abstract Algebra Intro.", "link": KHAN_STATS}, "jp": {"topic": "~Gatai", "summary": "Hard to.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "MITRE ATT&CK", "summary": "Mapping.", "link": "https://attack.mitre.org/"}},
+            4: {"math": {"topic": "Fields", "summary": "Finite Fields (Crypto).", "link": KHAN_STATS}, "jp": {"topic": "~Zaru o enai", "summary": "Must do.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Threat Hunt", "summary": "Hypothesis.", "link": "https://www.threathunting.net/"}},
+            5: {"math": {"topic": "Elliptic Curves", "summary": "ECC basics.", "link": KHAN_STATS}, "jp": {"topic": "~Te yamanai", "summary": "Forever doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "C2 Frameworks", "summary": "Cobalt Strike.", "link": "https://www.cobaltstrike.com/"}},
+            6: {"math": {"topic": "Crypto Math", "summary": "Discrete Log.", "link": KHAN_STATS}, "jp": {"topic": "~Ni wa", "summary": "For a...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Data Exfil", "summary": "Techniques.", "link": "https://attack.mitre.org/"}},
+            7: {"math": {"topic": "Week 36 Rev", "summary": "Boolean/Fields.", "link": KHAN_STATS}, "jp": {"topic": "Vocab N2", "summary": "Business.", "link": "https://ankiweb.net/"}, "cyber": {"topic": "Lab: C2", "summary": "Sliver C2.", "link": "https://github.com/BishopFox/sliver"}}
         }},
-        37: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Stokes' Thm", "summary": "Line to Surf.", "link": KHAN_MULTI}, "jp": {"topic": "~Ni watatte", "summary": "Throughout.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Purple Team", "summary": "Collab.", "link": "https://www.sans.org/"}},
-            2: {"math": {"topic": "Divergence Thm", "summary": "Flux to Vol.", "link": KHAN_MULTI}, "jp": {"topic": "~Oite", "summary": "In/At.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Incident Mgmt", "summary": "Coordination.", "link": "https://www.pagerduty.com/"}},
-            3: {"math": {"topic": "Maxwell Eq", "summary": "Physics app.", "link": KHAN_MULTI}, "jp": {"topic": "~Sai ni", "summary": "When.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Crisis Comm", "summary": "PR.", "link": "https://www.ready.gov/"}},
-            4: {"math": {"topic": "Calc 3 Review", "summary": "All Thms.", "link": KHAN_MULTI}, "jp": {"topic": "~Sai chuu", "summary": "In middle of.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Forensics Adv", "summary": "Malware Rev.", "link": "https://www.sans.org/"}},
-            5: {"math": {"topic": "Adv Problems", "summary": "Challenge.", "link": KHAN_MULTI}, "jp": {"topic": "~Bekida", "summary": "Should.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Mobile Foren", "summary": "iOS/Android.", "link": "https://www.magnetforensics.com/"}},
-            6: {"math": {"topic": "App Practice", "summary": "Real world.", "link": KHAN_MULTI}, "jp": {"topic": "~Beki dewa", "summary": "Should not.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Network Foren", "summary": "Zeek/Bro.", "link": "https://zeek.org/"}},
-            7: {"math": {"topic": "Week 37 Rev", "summary": "Stokes/Div.", "link": KHAN_MULTI}, "jp": {"topic": "Kanji N2", "summary": "Audit.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Lab: Zeek", "summary": "Log analysis.", "link": "https://docs.zeek.org/"}}
+        37: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Information Theory", "summary": "Entropy.", "link": KHAN_STATS}, "jp": {"topic": "~Ni watatte", "summary": "Throughout.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Purple Team", "summary": "Collab.", "link": "https://www.sans.org/"}},
+            2: {"math": {"topic": "Error Correction", "summary": "Hamming codes.", "link": KHAN_STATS}, "jp": {"topic": "~Oite", "summary": "In/At.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Incident Mgmt", "summary": "Coordination.", "link": "https://www.pagerduty.com/"}},
+            3: {"math": {"topic": "Hashing Math", "summary": "Collisions.", "link": KHAN_STATS}, "jp": {"topic": "~Sai ni", "summary": "When.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Crisis Comm", "summary": "PR.", "link": "https://www.ready.gov/"}},
+            4: {"math": {"topic": "Discrete Review", "summary": "Logic/Sets.", "link": KHAN_STATS}, "jp": {"topic": "~Sai chuu", "summary": "In middle of.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Forensics Adv", "summary": "Malware Rev.", "link": "https://www.sans.org/"}},
+            5: {"math": {"topic": "Adv Problems", "summary": "Proof practice.", "link": KHAN_STATS}, "jp": {"topic": "~Bekida", "summary": "Should.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Mobile Foren", "summary": "iOS/Android.", "link": "https://www.magnetforensics.com/"}},
+            6: {"math": {"topic": "App Practice", "summary": "Real world.", "link": KHAN_STATS}, "jp": {"topic": "~Beki dewa", "summary": "Should not.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Network Foren", "summary": "Zeek/Bro.", "link": "https://zeek.org/"}},
+            7: {"math": {"topic": "Week 37 Rev", "summary": "Info Theory.", "link": KHAN_STATS}, "jp": {"topic": "Kanji N2", "summary": "Audit.", "link": "https://kanji.garden/"}, "cyber": {"topic": "Lab: Zeek", "summary": "Log analysis.", "link": "https://docs.zeek.org/"}}
         }},
-        38: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Final Prep", "summary": "Review 1.", "link": KHAN_MULTI}, "jp": {"topic": "~Ta mono da", "summary": "Used to do.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Rev 1", "summary": "Architecture.", "link": "https://www.comptia.org/"}},
-            2: {"math": {"topic": "Final Prep", "summary": "Review 2.", "link": KHAN_MULTI}, "jp": {"topic": "~Tsutsu", "summary": "While.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Rev 2", "summary": "Ops.", "link": "https://www.comptia.org/"}},
-            3: {"math": {"topic": "Final Prep", "summary": "Review 3.", "link": KHAN_MULTI}, "jp": {"topic": "~Tsutsu aru", "summary": "In process of.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Rev 3", "summary": "Risk.", "link": "https://www.comptia.org/"}},
-            4: {"math": {"topic": "Mock Final", "summary": "Full test.", "link": KHAN_MULTI}, "jp": {"topic": "~To wa kagiranai", "summary": "Not always.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Mock", "summary": "Full test.", "link": "https://www.udemy.com/"}},
-            5: {"math": {"topic": "Analysis", "summary": "Weak points.", "link": KHAN_MULTI}, "jp": {"topic": "~Dake ni", "summary": "Being the case.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Weak Points", "summary": "Drill.", "link": "https://www.comptia.org/"}},
-            6: {"math": {"topic": "Relax", "summary": "Mental prep.", "link": KHAN_MULTI}, "jp": {"topic": "N2 Mock", "summary": "Full test.", "link": "https://www.jlpt.jp/"}, "cyber": {"topic": "CTF Adv", "summary": "Hard challenge.", "link": "https://ctftime.org/"}},
-            7: {"math": {"topic": "Week 38 Rev", "summary": "Ready.", "link": KHAN_MULTI}, "jp": {"topic": "Review", "summary": "Correction.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Lab: Final", "summary": "Full network build.", "link": "https://gns3.com/"}}
+        38: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Final Prep", "summary": "Review 1.", "link": KHAN_STATS}, "jp": {"topic": "~Ta mono da", "summary": "Used to do.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Rev 1", "summary": "Architecture.", "link": "https://www.comptia.org/"}},
+            2: {"math": {"topic": "Final Prep", "summary": "Review 2.", "link": KHAN_STATS}, "jp": {"topic": "~Tsutsu", "summary": "While.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Rev 2", "summary": "Ops.", "link": "https://www.comptia.org/"}},
+            3: {"math": {"topic": "Final Prep", "summary": "Review 3.", "link": KHAN_STATS}, "jp": {"topic": "~Tsutsu aru", "summary": "In process of.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Rev 3", "summary": "Risk.", "link": "https://www.comptia.org/"}},
+            4: {"math": {"topic": "Mock Final", "summary": "Full test.", "link": KHAN_STATS}, "jp": {"topic": "~To wa kagiranai", "summary": "Not always.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "CASP+ Mock", "summary": "Full test.", "link": "https://www.udemy.com/"}},
+            5: {"math": {"topic": "Analysis", "summary": "Weak points.", "link": KHAN_STATS}, "jp": {"topic": "~Dake ni", "summary": "Being the case.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Weak Points", "summary": "Drill.", "link": "https://www.comptia.org/"}},
+            6: {"math": {"topic": "Relax", "summary": "Mental prep.", "link": KHAN_STATS}, "jp": {"topic": "N2 Mock", "summary": "Full test.", "link": "https://www.jlpt.jp/"}, "cyber": {"topic": "CTF Adv", "summary": "Hard challenge.", "link": "https://ctftime.org/"}},
+            7: {"math": {"topic": "Week 38 Rev", "summary": "Ready.", "link": KHAN_STATS}, "jp": {"topic": "Review", "summary": "Correction.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Lab: Final", "summary": "Full network build.", "link": "https://gns3.com/"}}
         }},
-        39: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Mastery Check", "summary": "Vectors.", "link": KHAN_MULTI}, "jp": {"topic": "~Dake atte", "summary": "Appropriate for.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Emerging Tech", "summary": "AI/ML Security.", "link": "https://arxiv.org/"}},
-            2: {"math": {"topic": "Mastery Check", "summary": "Derivatives.", "link": KHAN_MULTI}, "jp": {"topic": "~Tara Saigo", "summary": "Once X happens.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Bio-hacking", "summary": "Medical devices.", "link": "https://www.fda.gov/"}},
-            3: {"math": {"topic": "Mastery Check", "summary": "Integrals.", "link": KHAN_MULTI}, "jp": {"topic": "~Tokoro datta", "summary": "Almost happened.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Auto Attacks", "summary": "Car hacking.", "link": "https://timur.tcarisland.com/"}},
-            4: {"math": {"topic": "Mastery Check", "summary": "Theorems.", "link": KHAN_MULTI}, "jp": {"topic": "~Nai koto wa nai", "summary": "It's not that...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Space Sec", "summary": "Satellites.", "link": "https://aerospace.org/"}},
+        39: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Mastery Check", "summary": "Logic.", "link": KHAN_STATS}, "jp": {"topic": "~Dake atte", "summary": "Appropriate for.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Emerging Tech", "summary": "AI/ML Security.", "link": "https://arxiv.org/"}},
+            2: {"math": {"topic": "Mastery Check", "summary": "Graphs.", "link": KHAN_STATS}, "jp": {"topic": "~Tara Saigo", "summary": "Once X happens.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Bio-hacking", "summary": "Medical devices.", "link": "https://www.fda.gov/"}},
+            3: {"math": {"topic": "Mastery Check", "summary": "Number Theory.", "link": KHAN_STATS}, "jp": {"topic": "~Tokoro datta", "summary": "Almost happened.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Auto Attacks", "summary": "Car hacking.", "link": "https://timur.tcarisland.com/"}},
+            4: {"math": {"topic": "Mastery Check", "summary": "Proofs.", "link": KHAN_STATS}, "jp": {"topic": "~Nai koto wa nai", "summary": "It's not that...", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Space Sec", "summary": "Satellites.", "link": "https://aerospace.org/"}},
             5: {"math": {"topic": "Portfolio", "summary": "Documenting.", "link": "https://github.com/"}, "jp": {"topic": "~Te irai", "summary": "Since doing.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Portfolio", "summary": "GitHub cleanup.", "link": "https://github.com/"}},
             6: {"math": {"topic": "Mentorship", "summary": "Teach someone.", "link": "https://discord.com/"}, "jp": {"topic": "N2 Prep", "summary": "Final Polish.", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Community", "summary": "Write a blog.", "link": "https://medium.com/"}},
-            7: {"math": {"topic": "Week 39 Rev", "summary": "Wrap up.", "link": KHAN_MULTI}, "jp": {"topic": "Immersion", "summary": "No subs.", "link": "https://www.netflix.com/"}, "cyber": {"topic": "Lab: Custom", "summary": "Build tool.", "link": "https://github.com/"}}
+            7: {"math": {"topic": "Week 39 Rev", "summary": "Wrap up.", "link": KHAN_STATS}, "jp": {"topic": "Immersion", "summary": "No subs.", "link": "https://www.netflix.com/"}, "cyber": {"topic": "Lab: Custom", "summary": "Build tool.", "link": "https://github.com/"}}
         }},
-        40: {"phase": "Phase 5: Expert - Calc 3 & CASP+", "days": {
-            1: {"math": {"topic": "Math Final", "summary": "Multivariable.", "link": KHAN_MULTI}, "jp": {"topic": "N2 Final", "summary": "Review.", "link": "https://www.jlpt.jp/"}, "cyber": {"topic": "CASP+ Final", "summary": "Exam prep.", "link": "https://www.comptia.org/"}},
+        40: {"phase": "Phase 5: Expert - Discrete & CASP+", "days": {
+            1: {"math": {"topic": "Math Final", "summary": "Discrete Math.", "link": KHAN_STATS}, "jp": {"topic": "N2 Final", "summary": "Review.", "link": "https://www.jlpt.jp/"}, "cyber": {"topic": "CASP+ Final", "summary": "Exam prep.", "link": "https://www.comptia.org/"}},
             2: {"math": {"topic": "Reflection", "summary": "Look back.", "link": "https://dayoneapp.com/"}, "jp": {"topic": "Reflection", "summary": "Look back.", "link": "https://dayoneapp.com/"}, "cyber": {"topic": "Reflection", "summary": "Look back.", "link": "https://dayoneapp.com/"}},
             3: {"math": {"topic": "Planning", "summary": "What's next?", "link": "https://trello.com/"}, "jp": {"topic": "Planning", "summary": "N1?", "link": "https://jlptsensei.com/"}, "cyber": {"topic": "Planning", "summary": "CISSP/OSCP?", "link": "https://www.isc2.org/"}},
             4: {"math": {"topic": "Rest", "summary": "Recover.", "link": "https://www.headspace.com/"}, "jp": {"topic": "Rest", "summary": "Recover.", "link": "https://www.headspace.com/"}, "cyber": {"topic": "Rest", "summary": "Recover.", "link": "https://www.headspace.com/"}},
