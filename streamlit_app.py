@@ -5,7 +5,7 @@ import pandas as pd
 st.set_page_config(page_title="CCSU CyberSecurity Mastery Tracker", layout="wide")
 
 # --- PHASE 1 TASK DATABASE ---
-# Sourced from user plan data for weeks 1-16
+# Sourced from your detailed plan for Weeks 1-16
 phase_1_tasks = {
     1: ["Algebra Foundations: Variables/Expressions", "Combining Like Terms", "Linear Equations Intro", "Multi-step Equations", "Parentheses & Solutions", "Unit Test Day"],
     2: ["Slope Intro & Intercept Form", "Graphing from Slope-Intercept", "Point-Slope & Standard Form", "Parallel & Perpendicular Lines", "Catch up on Graphing", "Unit Test Day"],
@@ -26,6 +26,7 @@ phase_1_tasks = {
 }
 
 # --- RESOURCE LINKS ---
+# Specific links mapping to your plan sources
 URLS = {
     "math_alg1": "https://www.khanacademy.org/math/algebra",
     "math_alg2": "https://www.khanacademy.org/math/algebra2",
@@ -44,7 +45,7 @@ if 'daily_progress' not in st.session_state:
 st.sidebar.header("Navigation")
 phase_choice = st.sidebar.selectbox("Select Study Phase", ["Phase 1: Algebra & Security", "Phase 2-4 (Coming Soon)"])
 
-# Progress Tracking
+# Progress Tracking for Phase 1
 completed = sum(st.session_state.daily_progress.values())
 total_phase1_tasks = 16 * 6
 st.sidebar.metric("Phase 1 Progress", f"{completed}/{total_phase1_tasks}")
@@ -62,7 +63,7 @@ if "Phase 1" in phase_choice:
 
             # Specific Daily Tasks from the Dictionary
             st.markdown("---")
-            tasks = phase_1_tasks.get(week, ["Task 1", "Task 2", "Task 3", "Task 4", "Task 5", "Task 6"])
+            tasks = phase_1_tasks.get(week, ["Review", "Practice", "Practice", "Lab Work", "Review", "Unit Test"])
             days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
             
             for i, task_text in enumerate(tasks):
@@ -75,12 +76,12 @@ if "Phase 1" in phase_choice:
 
 # GitHub Documentation Section
 st.divider()
-st.header("🖼️ Current Project: Modular Crypto Toolkit")
-[span_0](start_span)st.write("Start building this in **Week 7** to demonstrate your understanding of Binary Ops and Modular Arithmetic[span_0](end_span).")
+st.header("🚀 Project Milestone: Modular Crypto Toolkit")
+[span_2](start_span)st.write("Start building this in **Week 7** to demonstrate your understanding of Binary Ops and Modular Arithmetic[span_2](end_span).")
 
 with st.expander("View Week 7 Project Requirements"):
     st.markdown("""
-    - **[span_1](start_span)RSA Key Generator:** Use Prime Number and Modular Inverse math[span_1](end_span).
-    - **[span_2](start_span)XOR Encryptor:** Demonstrate logic gates via bitwise operators[span_2](end_span).
-    - **[span_3](start_span)README:** Document 'The Math', 'The Threat', and 'The Engineering'[span_3](end_span).
+    * **[span_3](start_span)RSA Key Generator**: Use Prime Number and Modular Inverse math[span_3](end_span).
+    * **[span_4](start_span)XOR Encryptor**: Demonstrate logic gates via bitwise operators[span_4](end_span).
+    * **[span_5](start_span)README**: Include sections for 'The Math', 'The Threat', and 'The Engineering'[span_5](end_span).
     """)
