@@ -46,8 +46,9 @@ phase_choice = st.sidebar.selectbox("Select Study Phase", ["Phase 1: Algebra & S
 
 # Progress Tracking
 completed = sum(st.session_state.daily_progress.values())
-st.sidebar.metric("Total Tasks Done", f"{completed}/{52*6}")
-st.sidebar.progress(completed / (52*6))
+total_phase1_tasks = 16 * 6
+st.sidebar.metric("Phase 1 Progress", f"{completed}/{total_phase1_tasks}")
+st.sidebar.progress(min(completed / total_phase1_tasks, 1.0))
 
 # --- DYNAMIC WEEKLY VIEW ---
 if "Phase 1" in phase_choice:
@@ -56,8 +57,8 @@ if "Phase 1" in phase_choice:
             # Quick Links
             m_url = URLS["math_alg1"] if week <= 9 else URLS["math_alg2"]
             l_col, r_col = st.columns(2)
-            l_col.link_button(f"🔢 Khan Academy Week {week}", m_url)
-            r_col.link_button("🛡️ TryHackMe Path", URLS["thm_sec_eng"])
+            l_col.link_button(f"🔢 Khan Academy Week {week}", m_url, use_container_width=True)
+            r_col.link_button("🛡️ TryHackMe Path", URLS["thm_sec_eng"], use_container_width=True)
 
             # Specific Daily Tasks from the Dictionary
             st.markdown("---")
@@ -75,13 +76,11 @@ if "Phase 1" in phase_choice:
 # GitHub Documentation Section
 st.divider()
 st.header("🖼️ Current Project: Modular Crypto Toolkit")
-[span_3](start_span)st.write("Start building this in **Week 7** to demonstrate your understanding of Binary Ops and Modular Arithmetic[span_3](end_span).")
-
-
+[span_0](start_span)st.write("Start building this in **Week 7** to demonstrate your understanding of Binary Ops and Modular Arithmetic[span_0](end_span).")
 
 with st.expander("View Week 7 Project Requirements"):
     st.markdown("""
-    - **[span_4](start_span)RSA Key Generator:** Use Prime Number and Modular Inverse math[span_4](end_span).
-    - **[span_5](start_span)XOR Encryptor:** Demonstrate logic gates via bitwise operators[span_5](end_span).
-    - **[span_6](start_span)README:** Document "The Math", "The Threat", and "The Engineering"[span_6](end_span).
+    - **[span_1](start_span)RSA Key Generator:** Use Prime Number and Modular Inverse math[span_1](end_span).
+    - **[span_2](start_span)XOR Encryptor:** Demonstrate logic gates via bitwise operators[span_2](end_span).
+    - **[span_3](start_span)README:** Document 'The Math', 'The Threat', and 'The Engineering'[span_3](end_span).
     """)
